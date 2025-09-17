@@ -15,10 +15,10 @@
             <button type="submit">Tags</button>
         </form>
         <form th:fragment="newAttractionForm" th:action="@{/attractions/add}" method="get">
-            <button type="submit">Opret</button>
+            <button type="submit">Register</button>
         </form>
         <form class="actions" th:fragment="updateAttractionForm(attraction)" th:action="@{/attractions/{name}/edit(name=${attraction.name})}" method="get">
-            <button type="submit">Rediger</button>
+            <button type="submit">Edit</button>
         </form>
         <form class="actions" th:fragment="deleteAttraction(attraction)" th:action="@{attractions/delete/{name}(name=${attraction.name})}" method="post">
             <button type="submit">Delete</button>

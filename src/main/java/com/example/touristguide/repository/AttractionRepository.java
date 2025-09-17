@@ -18,14 +18,14 @@ public class AttractionRepository {
     }
 
     private void populateRepository() {
-        attractions.add(new TouristAttraction("Tivoli", "Copenhagen’s largest amusement park", "København", new ArrayList<>(Arrays.asList(Tags.CHILDFRIENDLY, Tags.CONCERT, Tags.RESTAURANT, Tags.ENTERTAINMENT))));
+        attractions.add(new TouristAttraction("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.CHILDFRIENDLY, Tags.CONCERT, Tags.RESTAURANT, Tags.ENTERTAINMENT))));
         attractions.add(new TouristAttraction("Louisiana", "Famous art museum north of Copenhagen", "Humlebæk", new ArrayList<>(Arrays.asList(Tags.ART, Tags.NATURE))));
         attractions.add(new TouristAttraction("ARoS", "Aarhus Art Museum", "Aarhus", new ArrayList<>(Arrays.asList(Tags.ART, Tags.RESTAURANT, Tags.MUSEUM))));
         attractions.add(new TouristAttraction("Odense Zoo", "Animals form all over the world", "Odense", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
-        attractions.add(new TouristAttraction("Den blå planet", "Aquarium in Copenhagen", "København", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
+        attractions.add(new TouristAttraction("Den blå planet", "Aquarium in Copenhagen", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
         attractions.add(new TouristAttraction("Legoland", "LEGO amusement park", "Billund", new ArrayList<>(Arrays.asList(Tags.NATURE, Tags.CHILDFRIENDLY, Tags.ENTERTAINMENT))));
 
-        cities.add("København");
+        cities.add("Copenhagen");
         cities.add("Aabenraa");
         cities.add("Aalborg");
         cities.add("Aarhus");
