@@ -74,7 +74,13 @@ public class AttractionRepository {
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
-        attractions.add(attraction);
+
+        //check if attraction of same name already exists in list
+        if (this.getAttractionByName(attraction.getName()) != null) {
+            return null;
+        }
+
+        this.attractions.add(attraction);
 
         return attraction;
     }

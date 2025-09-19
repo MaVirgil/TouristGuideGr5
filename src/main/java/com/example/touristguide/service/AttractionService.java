@@ -28,8 +28,8 @@ public class AttractionService {
         return this.repository.getAttractionByName(name);
     }
 
-    public void addAttraction(TouristAttraction attraction) {
-        this.repository.addAttraction(attraction);
+    public TouristAttraction addAttraction(TouristAttraction attraction) {
+        return this.repository.addAttraction(attraction);
     }
 
     public void editAttraction(TouristAttraction attraction){

@@ -6,6 +6,8 @@ import com.example.touristguide.service.AttractionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 @Controller
@@ -89,9 +91,11 @@ public class AttractionController {
     //POST
 
     @PostMapping("/attractions/save")
-    public String saveAttraction(@ModelAttribute TouristAttraction attraction){
+    public String saveAttraction(RedirectAttributes redirectAttributes, @ModelAttribute TouristAttraction attraction){
 
-        service.addAttraction(attraction);
+        if (service.addAttraction(attraction) == null) {
+            redirectAttributes.addFlashAttribute("failedToAddAttraction", true);
+        }
 
         return "redirect:/attractions";
     }
