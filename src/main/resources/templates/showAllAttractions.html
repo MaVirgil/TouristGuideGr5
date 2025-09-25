@@ -42,14 +42,14 @@
                     <div th:insert="~{/fragments/_attractionsElements :: showAttractionTags(attraction=${attractions})}"></div>
                 </td>
                 <td>
-                    <div th:insert="~{/fragments/_attractionsElements :: updateAttractionForm(attraction=${attractions})}"></div>
+                    <div th:replace="~{/fragments/_attractionsElements :: updateAttractionForm(attraction=${attractions},pageRef='updateAttraction')}"></div>
                 </td>
                 <td>
                     <div th:insert="~{/fragments/_attractionsElements :: deleteAttraction(attraction=${attractions})}"></div>
                 </td>
             </tr>
         </table>
-        <div th:replace="~{/fragments/_attractionsElements :: newAttractionForm}"></div>
+        <div th:replace="~{/fragments/_attractionsElements :: newAttractionForm(pageRef='newAttraction')}"></div>
     </article>
 </section>
 </main>

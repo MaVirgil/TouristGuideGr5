@@ -14,7 +14,7 @@
 <main>
     <section>
         <article class="info-box">
-            <div th:replace="~{/fragments/_formElements :: formWrapperSave(attraction=${attraction})}"></div>
+            <div th:replace="~{/fragments/_formElements :: basicForm(attraction=${attraction}, pageRef=${pageRef})}"></div>
         </article>
     </section>
 </main>

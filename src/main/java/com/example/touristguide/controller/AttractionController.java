@@ -48,19 +48,24 @@ public class AttractionController {
         return "showAttraction";
     }
 
+    //Includes a fallback measure in case pageRef is not send required = false, defaultValue = "newAttraction"
     @GetMapping("/attractions/add")
-    public String addAttraction (Model model) {
+    public String addAttraction (Model model,
+                                 @RequestParam(value = "pageRef", required = false, defaultValue = "newAttraction") String pageRef) {
         TouristAttraction attractionToAdd = new TouristAttraction();
 
         model.addAttribute("attraction", attractionToAdd);
         model.addAttribute("tags", Tags.values());
         model.addAttribute("cities", this.service.getCities());
+        model.addAttribute("pageRef", pageRef);
 
         return "newAttractionForm";
     }
 
+    //Includes a fall back in case pageRef is not send required = false, defaultValue = "updateAttraction"
     @GetMapping("/attractions/{name}/edit")
-    public String editAttraction(@PathVariable String name, Model model) {
+    public String editAttraction(@PathVariable String name, Model model,
+                                 @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
         TouristAttraction attraction = service.getAttractionByName(name);
         Tags[] tagList = Tags.values();
 
@@ -71,6 +76,7 @@ public class AttractionController {
         model.addAttribute("attraction", attraction);
         model.addAttribute("tags", tagList);
         model.addAttribute("cities", this.service.getCities());
+        model.addAttribute("pageRef", pageRef);
 
         return "updateAttractionForm";
     }
