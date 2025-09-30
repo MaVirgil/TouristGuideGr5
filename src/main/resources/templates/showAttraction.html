@@ -9,22 +9,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-<header th:replace="~{/fragments/_commonElements :: header}"></header>
-<nav th:replace="~{/fragments/_commonElements :: topNav}"></nav>
-<main>
-    <section>
-        <article class="info-box" th:object="${byName}">
-            <h2 th:text="*{name}"></h2>
-            <p th:text="*{description}"></p>
-            <p th:text="*{city}"></p>
-            <table>
-                <tr th:each="tags :${byName.getSelectedTags}">
-                    <td th:text="${tags.name}"></td>
-                </tr>
-            </table>
-        </article>
-    </section>
-</main>
-<footer th:replace="~{/fragments/_commonElements :: footer}"></footer>
+<div class="top_grid">
+    <header th:replace="~{/fragments/_commonElements :: header}"></header>
+    <nav th:replace="~{/fragments/_commonElements :: topNav}"></nav>
+    <main>
+        <div class="content_grid">
+            <aside class="left_sidebar"></a>
+            <section>
+                <article class="info-box">
+                    <h2 th:text="*{name}"></h2>
+                    <p th:text="*{description}"></p>
+                    <p th:text="*{city}"></p>
+                    <table>
+                        <tr th:each="tags :${byName.getSelectedTags}">
+                            <td th:text="${tags.name}"></td>
+                        </tr>
+                    </table>
+                </article>
+            </section>
+            <aside class="right_sidebar"></aside>
+        </div>
+    </main>
+    <footer th:replace="~{/fragments/_commonElements :: footer}"></footer>
+</div>
 </body>
 </html>

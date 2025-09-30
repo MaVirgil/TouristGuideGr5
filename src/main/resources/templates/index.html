@@ -9,58 +9,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-<header th:replace="~{/fragments/_commonElements :: header}"></header>
-<nav th:replace="~{/fragments/_commonElements :: topNav}"></nav>
-<main>
-<section>
-    <article class="info-box">
-        <h2>GENERAL INFORMATION</h2>
-        <hr>
-        <p>We primarily concern ourselves with Denmark.
-            You will find the many attractions in the above links including but
-            not limited to:
-        </p>
-        <ul>
-            <li>Sightseeing</li>
-            <li>Amusement Parks</li>
-            <li>Recreational Areas</li>
-            <li>Beaches</li>
-        </ul>
-        <p>And many more!</p>
-    </article>
+<div class="top_grid">
+    <header th:replace="~{/fragments/_commonElements :: header}"></header>
+    <nav th:replace="~{/fragments/_commonElements :: topNav}"></nav>
+    <main>
+        <div class="content_grid">
+            <aside class="left_sidebar"></aside>
+            <section>
+                <article class="info-box">
+                    <h2>GENERAL INFORMATION</h2>
+                    <hr>
+                    <p>We primarily concern ourselves with Denmark.
+                        You will find the many attractions in the above links including but
+                        not limited to:
+                    </p>
+                    <ul>
+                        <li>Sightseeing</li>
+                        <li>Amusement Parks</li>
+                        <li>Recreational Areas</li>
+                        <li>Beaches</li>
+                    </ul>
+                    <p>And many more!</p>
+                </article>
 
-    <article class="info-box">
-        <h2>TOURIST INFORMATION</h2>
-        <hr>
-        <p>Find relevant necessities for your trip below</p>
-        <nav>
-            <ul>
-                <li><a href="https://www.google.com/maps/search/restaurants/@55.7067462,12.5502321,4721m/data=!3m2!1e3!4b1?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
-                       target="_blank">Restaurants </a>
-                </li>
-                <li><a href="https://www.google.com/maps/search/toilet/@55.7067462,12.5502321,4721m/data=!3m2!1e3!4b1?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
-                       target="_blank">Toilets</a>
-                </li>
-                <li><a href="https://denkongeligesamling.dk/rosenborg-slot/billetter/" target="_blank">
-                    Rosenborg Slot tickets</a>
-                </li>
-            </ul>
-        </nav>
-    </article>
+                <article class="info-box">
+                    <h2>TOURIST INFORMATION</h2>
+                    <hr>
+                    <p>Find relevant necessities for your trip below</p>
+                    <nav>
+                        <ul>
+                            <li><a href="https://www.google.com/maps/search/restaurants/@55.7067462,12.5502321,4721m/data=!3m2!1e3!4b1?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
+                                   target="_blank">Restaurants </a>
+                            </li>
+                            <li><a href="https://www.google.com/maps/search/toilet/@55.7067462,12.5502321,4721m/data=!3m2!1e3!4b1?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
+                                   target="_blank">Toilets</a>
+                            </li>
+                            <li><a href="https://denkongeligesamling.dk/rosenborg-slot/billetter/" target="_blank">
+                                Rosenborg Slot tickets</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </article>
 
-    <article class="info-box">
-        <h2>Safety</h2>
-        <hr>
-        <p>Copenhagen prides itself on being an exceedingly safe city! However be aware that pickpockets are common in the following areas:
-        </p>
-        <ul>
-            <li>Strøget</li>
-            <li>Copenhagen Central Station</li>
-        </ul>
-        <p>Should you require assistance from the police you can visit site or find one of the many police stations maps</p>
-    </article>
-</section>
-</main>
-<footer th:replace="~{/fragments/_commonElements :: footer}"></footer>
+                <article class="info-box">
+                    <h2>Safety</h2>
+                    <hr>
+                    <p>Copenhagen prides itself on being an exceedingly safe city! However be aware that pickpockets are common in the following areas:
+                    </p>
+                    <ul>
+                        <li>Strøget</li>
+                        <li>Copenhagen Central Station</li>
+                    </ul>
+                    <p>Should you require assistance from the police you can visit site or find one of the many police stations maps</p>
+                </article>
+            </section>
+            <aside class="right_sidebar"></aside>
+        </div>
+    </main>
+    <footer th:replace="~{/fragments/_commonElements :: footer}"></footer><section
+</div>
 </body>
 </html>

@@ -5,12 +5,7 @@
     <title>Attraction Fragments</title>
 </head>
 <body>
-        <!--
-        Sætter et fragment ved hjælp af th:fragment
-        === FORM FRAGMENTS ===
-        De her burde nok smides ind i _formElements
-        Alle tager imod et attraction object.
-        -->
+        <!-- Show All Attraction Links-->
         <a class="actions" th:fragment="showAttractionTags(attraction)" th:action="@{'/attractions/' + ${attraction.name} + '/tags'}">
             <button type="submit">Tags</button>
         </a>
@@ -23,5 +18,10 @@
         <form class="actions" th:fragment="deleteAttraction(attraction)" th:action="@{'/attractions/delete/' + ${attraction.name}}" method="post">
             <button type="submit">Delete</button>
         </form>
+
+        <!-- Nav bar links -->
+        <a th:fragment="home_link" href="/">Home</a>
+        <a th:fragment="attractions_link" href="/attractions">Attractions</a>
+        <a th:fragment="about_link" href="/about.html">About</a>
 </body>
 </html>
