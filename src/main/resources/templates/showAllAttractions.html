@@ -2,57 +2,61 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Show All Attractions</title>
     <link rel="stylesheet" th:href="@{/style/style.css}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-<header th:replace="~{fragments/_commonElements :: header}"></header>
-<nav th:replace="~{fragments/_commonElements :: topNav}"></nav>
-<main>
-    <dialog th:open="${failedToAddAttraction}">
-        <form>
-            <p>Attractions cannot have duplicate names!</p>
-            <button>OK</button>
-        </form>
-    </dialog>
-<section>
-    <article class="info-box">
-        <h1>Tourist Attractions</h1>
-
-        <table>
-            <thead>
-                <tr th:if="${attractionsList.isEmpty()}">There are no registered attractions</tr>
-                <tr th:if="${!attractionsList.isEmpty()}">
-                    <th>Name</th> <th>Description</th> <th>City</th> <th>Actions</th>
-                </tr>
-            </thead>
-            <tr th:each="attractions: ${attractionsList}">
-                <td th:text="${attractions.name}"></td>
-                <td th:text="${attractions.getShortenedDescription}"></td>
-                <td th:text="${attractions.city}"></td>
-                <td>
-
-                    <!--
-                    Inserter fragmentet i et <div> element da <form> elementer ikke er må stå direkte i et <td> element.
-                    Tager derudover imod et object attraction=$(attraction) for at korrekt kunne sende en videre.
-                    -->
-                    <div th:insert="~{fragments/_attractionsElements :: showAttractionTags(attraction=${attractions})}"></div>
-                </td>
-                <td>
-                    <div th:replace="~{fragments/_attractionsElements :: updateAttractionForm(attraction=${attractions},pageRef='updateAttraction')}"></div>
-                </td>
-                <td>
-                    <div th:insert="~{fragments/_attractionsElements :: deleteAttraction(attraction=${attractions})}"></div>
-                </td>
-            </tr>
-        </table>
-        <div th:replace="~{fragments/_attractionsElements :: newAttractionForm(pageRef='newAttraction')}"></div>
-    </article>
-</section>
-</main>
-<footer th:replace="~{fragments/_commonElements :: footer}"></footer>
+<div class="top_grid">
+    <header th:replace="~{fragments/_commonElements :: header}"></header>
+    <nav th:replace="~{fragments/_commonElements :: topNav}"></nav>
+    <main>
+        <div class="content_grid">
+            <aside class="left_sidebar"></aside>
+            <section>
+                <dialog th:open="${failedToAddAttraction}">
+                    <form>
+                        <p>Attractions cannot have duplicate names!</p>
+                        <button>OK</button>
+                    </form>
+                </dialog>
+                <article class="info-box">
+                    <h1>Tourist Attractions</h1>
+                    <table>
+                        <thead>
+                            <tr th:if="${attractionsList.isEmpty()}">There are no registered attractions</tr>
+                            <tr th:if="${!attractionsList.isEmpty()}">
+                                <th>Name</th> <th>Description</th> <th>City</th> <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tr th:each="attractions: ${attractionsList}">
+                            <td th:text="${attractions.name}"></td>
+                            <td th:text="${attractions.getShortenedDescription}"></td>
+                            <td th:text="${attractions.city}"></td>
+                            <td>
+                                <!--
+                                Inserter fragmentet i et <div> element da <form> elementer ikke er må stå direkte i et <td> element.
+                                Tager derudover imod et object attraction=$(attraction) for at korrekt kunne sende en videre.
+                                -->
+                                <div th:insert="~{fragments/_attributeElements :: showAttractionTags(attraction=${attractions})}"></div>
+                            </td>
+                            <td>
+                                <div th:replace="~{fragments/_attributeElements :: updateAttractionForm(attraction=${attractions},pageRef='updateAttraction')}"></div>
+                            </td>
+                            <td>
+                                <div th:insert="~{fragments/_attributeElements :: deleteAttraction(attraction=${attractions})}"></div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div th:replace="~{fragments/_attributeElements :: newAttractionForm(pageRef='newAttraction')}"></div>
+                </article>
+            </section>
+            <aside class="right_sidebar"></aside>
+        </div>
+    </main>
+    <footer th:replace="~{fragments/_commonElements :: footer}"></footer>
+</div>
 </body>
 </html>

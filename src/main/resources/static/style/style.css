@@ -2,34 +2,42 @@ body {
     font-family: "Poppins", sans-serif;
     color: #16404D;
     background-color: #FBF5DD;
-    box-sizing: border-box;
-    max-width: 850px;
-    margin: auto;
 }
 
-* {
-    box-sizing: inherit;
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.top_grid {
+    display: grid;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+
+}
+
+.content_grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
 }
 
 header {
     text-align: center;
-    width: inherit;
     height: 300px;
 }
 
 header h1 {
     position: absolute;
-    width: 100%;
+    width: 60%;
     text-align: center;
     font-size: 40px;
-    margin: 0;
     top: 22px;
-    left: 0;
+    left: 20%;
 }
 
 #header-background-image {
-    width: 850px;
     height: 300px;
+    width:60%;
     object-fit: fill;
     border-color: #364442;
     border-width: 2px;
@@ -42,18 +50,19 @@ a {
 }
 
 #nav-container {
-    box-sizing: content-box;
     background-color: #A6CDC6;
-    margin-bottom: 20px;
-    border-bottom-style: solid;
+    margin: 0 auto 20px auto;
+    height: 2em;
     border-left-style: solid;
     border-right-style: solid;
     border-bottom-left-radius: 13px;
     border-bottom-right-radius: 13px;
-    border-bottom-width: 2px;
     border-left-width: 2px;
     border-right-width: 2px;
     border-color: #364442;
+    width:60%;
+    z-index: 10;
+    box-shadow: 0 2px 0 0 #364442;
 }
 
 #top-nav {
@@ -96,6 +105,14 @@ a {
     margin: 0;
     height: 2em;
 }
+
+.left_sidebar, .right_sidebar {
+
+}
+
+section {
+}
+
 .actions {
     display: inline-block;
     width: 64px;
@@ -154,12 +171,13 @@ textarea {
 footer {
     background-color: #DDA853;
     padding: 15px;
-    margin-top: 20px;
+    margin: 20px auto 0 auto;
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
     border-style: solid;
     border-width: 2px;
     border-color: #4e3b1e;
+    width:60%;
 }
 
 .poppins-thin {

@@ -23,5 +23,10 @@
         <form class="actions" th:fragment="deleteAttraction(attraction)" th:action="@{'/attractions/delete/' + ${attraction.name}}" method="post">
             <button type="submit">Delete</button>
         </form>
+
+        <!-- Nav bar links -->
+        <a th:fragment="home_link" href="/">Home</a>
+        <a th:fragment="attractions_link" href="/attractions">Attractions</a>
+        <a th:fragment="about_link" href="/about.html">About</a>
 </body>
 </html>
