@@ -75,6 +75,9 @@ public class AttractionRepository {
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
 
+        //remove whitespaces from start and end of name
+        attraction.setName(attraction.getName().trim());
+
         //check if attraction of same name already exists in list
         if (this.getAttractionByName(attraction.getName()) != null) {
             return null;
