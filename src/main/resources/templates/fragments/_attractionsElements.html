@@ -11,7 +11,7 @@
         De her burde nok smides ind i _formElements
         Alle tager imod et attraction object.
         -->
-        <a class="actions" th:fragment="showAttractionTags(attraction)" th:action="@{'/attractions/' + ${attraction.name} + '/tags'}">
+        <a class="actions" th:fragment="showAttractionTags(attraction)" th:href="@{'/attractions/' + ${attraction.name} + '/tags'}">
             <button type="submit">Tags</button>
         </a>
         <a th:fragment="newAttractionForm(pageRef)" th:href="@{'/attractions/add?pageRef=' + ${pageRef}}">
