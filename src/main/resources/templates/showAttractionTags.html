@@ -10,8 +10,8 @@
           rel="stylesheet">
 </head>
 <body>
-<header th:replace="~{/fragments/_commonElements :: header}"></header>
-<nav th:replace="~{/fragments/_commonElements :: topNav}"></nav>
+<header th:replace="~{fragments/_commonElements :: header}"></header>
+<nav th:replace="~{fragments/_commonElements :: topNav}"></nav>
 <main>
     <section>
         <article class="info-box" th:object="${attraction}">
@@ -19,10 +19,10 @@
             <ul>
                 <li th:each="tagList : ${attraction.getSelectedTags}" th:text="${tagList.name}"></li>
             </ul>
-            <div th:replace="~{/fragments/_formElements :: formGoBack}"></div>
+            <div th:replace="~{fragments/_formElements :: formGoBack}"></div>
         </article>
     </section>
 </main>
-<footer th:replace="~{/fragments/_commonElements :: footer}"></footer>
+<footer th:replace="~{fragments/_commonElements :: footer}"></footer>
 </body>
 </html>
