@@ -5,8 +5,13 @@
     <title>Attraction Fragments</title>
 </head>
 <body>
-        <!-- Show All Attraction Links-->
-        <a class="actions" th:fragment="showAttractionTags(attraction)" th:action="@{'/attractions/' + ${attraction.name} + '/tags'}">
+        <!--
+        Sætter et fragment ved hjælp af th:fragment
+        === FORM FRAGMENTS ===
+        De her burde nok smides ind i _formElements
+        Alle tager imod et attraction object.
+        -->
+        <a class="actions" th:fragment="showAttractionTags(attraction)" th:href="@{'/attractions/' + ${attraction.name} + '/tags'}">
             <button type="submit">Tags</button>
         </a>
         <a th:fragment="newAttractionForm(pageRef)" th:href="@{'/attractions/add?pageRef=' + ${pageRef}}">
