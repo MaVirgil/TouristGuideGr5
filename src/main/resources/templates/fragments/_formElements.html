@@ -6,7 +6,7 @@
 </head>
 <body>
     <div th:fragment="basicForm(attraction, pageRef)" th:object="${attraction}" class="form-wrapper">
-        <form action="#" th:action="@{/attractions/update}" method="post">
+        <form action="#" th:action="${pageRef} == 'newAttraction' ? @{/attractions/save} : @{/attractions/update}" method="post">
             <!-- Headers -->
             <h2 th:if="${pageRef == 'newAttraction'}">Register an attraction</h2>
             <h2 th:if="${pageRef == 'updateAttraction'}">Update an attraction</h2>
