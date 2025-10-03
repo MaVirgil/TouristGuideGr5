@@ -16,10 +16,15 @@
     <div id="nav-container" th:fragment="topNav">
         <nav id="top-nav">
             <a href="/">Home</a>
-            <hr>
             <a href="/attractions">Attractions</a>
+            <a href="/about.html">About</a>
         </nav>
     </div>
+
+    <!-- CONTENT FRAGMENTS || Could be useful for dynamically generated sections? -->
+    <section th:fragment="sections"></section>
+
+    <article th:fragment="articles" class="info-box"></article>
 
     <!-- FOOTER FRAGMENT -->
     <footer th:fragment="footer">
