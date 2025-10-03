@@ -1,13 +1,13 @@
-INSERT INTO City (City_Name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
+INSERT IGNORE INTO City (City_Name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
 	("Birkerød"), ("Billund"), ("Esbjerg"), ("Fredericia"), ("Frederiksberg"), ("Helsingør"), ("Herlev"),
     ("Herning"), ("Hillerød"), ("Holbæk"), ("Holstebro"), ("Horsens"), ("Humlebæk"), ("Kolding"), ("Køge"),
     ("Næstved"), ("Odense"), ("Randers"), ("Ringsted"), ("Roskilde"), ("Silkeborg"),
     ("Slagelse"), ("Sønderborg"), ("Svendborg"), ("Vejle"), ("Viborg");
     
-INSERT INTO Tags (Tags_Name) VALUES ("Restaurant"), ("Gratis"), ("Børnevenlig"),
+INSERT IGNORE INTO Tags (Tags_Name) VALUES ("Restaurant"), ("Gratis"), ("Børnevenlig"),
 	("Kunst"), ("Museum"), ("Natur"), ("Underholdning"), ("Koncert");
 
-INSERT INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
+INSERT IGNORE INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
 	SELECT A.column0, A.column1, C.City_ID
     FROM
 		(VALUES
@@ -21,7 +21,7 @@ INSERT INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
 	JOIN
 		City AS C ON A.City_Lookup = C.City_Name;
 
-INSERT INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
+INSERT IGNORE INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
 	SELECT Att.Attraction_ID, T.Tags_ID
 		FROM
 			(SELECT "Tivoli" AS Att_Lookup, "Restaurant" AS T_Lookup

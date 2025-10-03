@@ -5,19 +5,19 @@ USE tourist_guide;
 
 CREATE TABLE Tags (
 	Tags_ID INT NOT NULL UNIQUE AUTO_INCREMENT,
-    Tags_Name VARCHAR(50) NOT NULL,
+    Tags_Name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (Tags_ID)
 );
 
 CREATE TABLE City (
 	City_ID INT NOT NULL UNIQUE AUTO_INCREMENT,
-    City_Name VARCHAR(255) NOT NULL,
+    City_Name VARCHAR(255) NOT NULL UNIQUE,
     PRIMARY KEY (City_ID)
 );
 
 CREATE TABLE Attraction (
 	Attraction_ID INT NOT NULL UNIQUE AUTO_INCREMENT,
-    Attraction_Name VARCHAR(255) NOT NULL,
+    Attraction_Name VARCHAR(255) NOT NULL UNIQUE,
     Attraction_Desc TINYTEXT NOT NULL,
     City_ID INT NOT NULL,
     PRIMARY KEY (Attraction_ID),
@@ -26,8 +26,8 @@ CREATE TABLE Attraction (
 );
 
 CREATE TABLE Tags_Attraction_Junction (
-	 Attraction_ID INT NOT NULL UNIQUE,
-     Tags_ID INT NOT NULL UNIQUE,
+	 Attraction_ID INT NOT NULL,
+     Tags_ID INT NOT NULL,
      PRIMARY KEY (Attraction_ID, Tags_ID),
      FOREIGN KEY (Attraction_ID) REFERENCES Attraction (Attraction_ID)
 		ON DELETE RESTRICT,
