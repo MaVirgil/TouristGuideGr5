@@ -2,7 +2,9 @@ package com.example.touristguide.repository;
 
 import com.example.touristguide.model.Tags;
 import com.example.touristguide.model.TouristAttraction;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.*;
 
 import java.util.*;
 
@@ -13,8 +15,8 @@ public class AttractionRepository {
     private final List<String> cities = new ArrayList<>();
 
 
-    public AttractionRepository(){
-        populateRepository();
+    public AttractionRepository(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     private void populateRepository() {
