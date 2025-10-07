@@ -35,8 +35,8 @@
                 <fieldset>
                     <legend>Choose applicable tags</legend>
                     <div th:each="tag : ${tags}" id="tag-checkbox">
-                        <label th:for="${'tag-' + tag}" th:text="${tag}"></label>
-                        <input type="checkbox" th:id="${'tag-' + tag}" th:field="*{selectedTags}" th:value="${tag}" th:attrappend="checked=${attraction.getSelectedTags.contains(tag)}">
+                        <label th:for="${tag}" th:text="${tag}"></label>
+                        <input type="checkbox" th:id="${tag}" th:field="*{selectedTags}" th:value="${tag}">
                     </div>
                 </fieldset>
             </div>
