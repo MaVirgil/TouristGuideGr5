@@ -3,34 +3,34 @@ CREATE DATABASE tourist_guide
 	DEFAULT CHARACTER SET utf8mb4;
 USE tourist_guide;
 
-CREATE TABLE Tags (
-	Tags_ID INT NOT NULL UNIQUE AUTO_INCREMENT,
-    Tags_Name VARCHAR(50) NOT NULL,
-    PRIMARY KEY (Tags_ID)
+CREATE TABLE Tag (
+	id INT NOT NULL UNIQUE AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE City (
-	City_ID INT NOT NULL UNIQUE AUTO_INCREMENT,
-    City_Name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (City_ID)
+	id INT NOT NULL UNIQUE AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE Attraction (
-	Attraction_ID INT NOT NULL UNIQUE AUTO_INCREMENT,
-    Attraction_Name VARCHAR(255) NOT NULL,
-    Attraction_Desc TINYTEXT NOT NULL,
-    City_ID INT NOT NULL,
-    PRIMARY KEY (Attraction_ID),
-    FOREIGN KEY (City_ID) REFERENCES City (City_ID)
+	id INT NOT NULL UNIQUE AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description TINYTEXT NOT NULL,
+    city_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (city_id) REFERENCES city (id)
 		ON DELETE RESTRICT
 );
 
 CREATE TABLE Tags_Attraction_Junction (
-	 Attraction_ID INT NOT NULL UNIQUE,
-     Tags_ID INT NOT NULL UNIQUE,
-     PRIMARY KEY (Attraction_ID, Tags_ID),
-     FOREIGN KEY (Attraction_ID) REFERENCES Attraction (Attraction_ID)
+	 attraction_id INT NOT NULL,
+     tag_id INT NOT NULL,
+     PRIMARY KEY (attraction_id, tag_id),
+     FOREIGN KEY (attraction_id) REFERENCES Attraction (id)
 		ON DELETE RESTRICT,
-	FOREIGN KEY (Tags_ID) REFERENCES Tags (Tags_ID)
+	FOREIGN KEY (tag_id) REFERENCES tag (id)
 		ON DELETE RESTRICT
 );
