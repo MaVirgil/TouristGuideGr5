@@ -37,6 +37,9 @@ public class AttractionService {
         return repository.editAttraction(attraction);
     }
 
+    public List<String> getAllTagNames(){
+        return this.repository.getAllTagNames();
+    }
     public void deleteAttraction(int id){
         this.repository.deleteAttraction(id);
     }
