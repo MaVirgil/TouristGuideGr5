@@ -95,7 +95,9 @@ public class AttractionRepository {
 
             String tagsString = rs.getString("tags");
             if (tagsString != null) {
-                List<String> tags = Arrays.asList(tagsString.split(","));
+                List<String> tags = Arrays.stream(tagsString.split(","))
+                                          .map(String::trim)
+                                          .toList();
                 attraction.setSelectedTags(tags);
             } else {
                 attraction.setSelectedTags(Collections.emptyList());
