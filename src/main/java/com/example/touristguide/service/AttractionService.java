@@ -1,6 +1,6 @@
 package com.example.touristguide.service;
 
-import com.example.touristguide.model.Tags;
+import com.example.touristguide.model.Tag;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
@@ -32,14 +32,39 @@ public class AttractionService {
         return this.repository.addAttraction(attraction);
     }
 
-    public void editAttraction(TouristAttraction attraction){
 
+    public int editAttraction(TouristAttraction attraction){
+        /*Integer getCityId = repository.getCityByName(attraction.getCity());
+
+        if(getCityId == null) {
+            System.err.println("Error: City " + attraction.getCity() + " not found");
+
+            return null;
+        }
+
+        TouristAttraction newAttraction = new TouristAttraction();
+
+        newAttraction.setId(attraction.getId());
+        newAttraction.setName(attraction.getName());
+        newAttraction.setDescription(attraction.getDescription());
+        ArrayList<Tag> newTags = attraction.getSelectedTags();
+
+        int rowsUpdated = repository.editAttraction(newAttraction);
+
+        repository.deleteTagsByAttractionID(attraction.getId());
+        for (Tag tag: newTags) {
+            repository.addAttractionTagsByID(attraction.getId(), tag.getId());
+        }
+
+        newAttraction.setSelectedTags(newTags);
+
+        int id = attraction.getId();
         String name = attraction.getName();
         String newDescription = attraction.getDescription();
-        ArrayList<Tags> newTags = attraction.getSelectedTags();
-        String newCity = attraction.getCity();
+        ArrayList<Tag> newTags = attraction.getSelectedTags();
+        String newCity = attraction.getCity();*/
 
-        this.repository.editAttraction(name, newDescription, newCity, newTags);
+        return this.repository.editAttraction(attraction);
     }
 
     public void deleteAttraction(int id){

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TouristAttraction {
+    private int id;
     private String name;
     private String description;
     private String city;
@@ -18,6 +19,10 @@ public class TouristAttraction {
     }
 
     public TouristAttraction(){}
+
+    public int getId(){
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -42,8 +47,12 @@ public class TouristAttraction {
         return city;
     }
 
-    public ArrayList<Tags> getSelectedTags() {
+    public List<String> getSelectedTags() {
         return selectedTags;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -58,7 +67,7 @@ public class TouristAttraction {
         this.city = city;
     }
 
-    public void setSelectedTags(ArrayList<Tags> tagList) {
+    public void setSelectedTags(List<String> tagList) {
         this.selectedTags = tagList;
     }
 }
