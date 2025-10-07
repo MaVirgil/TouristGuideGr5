@@ -73,7 +73,7 @@ public class AttractionController {
         }
 
         model.addAttribute("attraction", attraction);
-        model.addAttribute("tags", tagList);
+        model.addAttribute("tags", service.getAllTagNames());
         model.addAttribute("cities", this.service.getCities());
         model.addAttribute("pageRef", pageRef);
 
