@@ -30,7 +30,7 @@
                 </div>
                 <label for="city" class="form-label">Select a city</label>
                 <select id="city" th:field="*{city}">
-                    <option th:each="city : ${cities}" th:value="${city}" th:text="${city}"/>
+                    <option th:each="cityName : ${cities}" th:value="${cityName}" th:text="${cityName}"/>
                 </select>
                 <fieldset>
                     <legend>Choose applicable tags</legend>

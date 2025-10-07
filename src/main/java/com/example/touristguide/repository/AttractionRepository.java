@@ -181,16 +181,17 @@ public class AttractionRepository {
     }
 
     public int getCityByName(String cityName) {
-        String selectSql = "SELECT * FROM City WHERE name = ?";
-
-        Object[] args = {
-                cityName
-        };
+        String selectSql = "SELECT id FROM City WHERE name = ?";
 
         try {
-            return jdbcTemplate.queryForObject(selectSql, Integer.class, cityName);
+            System.out.println("Looking up city: " + cityName);
+            int cityId = jdbcTemplate.queryForObject(selectSql, Integer.class, cityName);
+            System.out.println("Found city:" + cityId);
+
+            return cityId;
+
         } catch(EmptyResultDataAccessException e) {
-            System.out.println("City not found:" + e.getMessage());
+            System.out.println("City not found:" + cityName);
 
             return -1;
         }
