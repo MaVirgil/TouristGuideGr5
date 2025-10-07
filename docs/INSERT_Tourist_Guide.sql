@@ -1,14 +1,14 @@
-INSERT IGNORE INTO City (City_Name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
+INSERT IGNORE INTO City (name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
 	("Birkerød"), ("Billund"), ("Esbjerg"), ("Fredericia"), ("Frederiksberg"), ("Helsingør"), ("Herlev"),
     ("Herning"), ("Hillerød"), ("Holbæk"), ("Holstebro"), ("Horsens"), ("Humlebæk"), ("Kolding"), ("Køge"),
     ("Næstved"), ("Odense"), ("Randers"), ("Ringsted"), ("Roskilde"), ("Silkeborg"),
     ("Slagelse"), ("Sønderborg"), ("Svendborg"), ("Vejle"), ("Viborg");
     
-INSERT IGNORE INTO Tags (Tags_Name) VALUES ("Restaurant"), ("Gratis"), ("Børnevenlig"),
+INSERT IGNORE INTO Tag (name) VALUES ("Restaurant"), ("Gratis"), ("Børnevenlig"),
 	("Kunst"), ("Museum"), ("Natur"), ("Underholdning"), ("Koncert");
 
-INSERT IGNORE INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
-	SELECT A.column0, A.column1, C.City_ID
+INSERT IGNORE INTO Attraction (name, description, city_id)
+	SELECT A.column0, A.column1, C.id
     FROM
 		(VALUES
 			ROW("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen"),
@@ -19,10 +19,10 @@ INSERT IGNORE INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
             ROW("Legoland", "LEGO amusement park", "Billund")
 		) AS A (column0, column1, City_Lookup)
 	JOIN
-		City AS C ON A.City_Lookup = C.City_Name;
+		City AS C ON A.City_Lookup = C.name;
 
-INSERT IGNORE INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
-	SELECT Att.Attraction_ID, T.Tags_ID
+INSERT IGNORE INTO Tags_Attraction_Junction (attraction_id, tag_id)
+	SELECT Att.id, T.id
 		FROM
 			(SELECT "Tivoli" AS Att_Lookup, "Restaurant" AS T_Lookup
             UNION ALL
@@ -52,7 +52,7 @@ INSERT IGNORE INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
             UNION ALL
             SELECT "Legoland", "Restaurant"
             ) AS A
-            JOIN Attraction AS Att ON A.Att_Lookup = Att.Attraction_Name
-			JOIN Tags AS T ON A.T_Lookup = T.Tags_Name;
+            JOIN Attraction AS Att ON A.Att_Lookup = Att.name
+			JOIN Tag AS T ON A.T_Lookup = T.name;
             
     
