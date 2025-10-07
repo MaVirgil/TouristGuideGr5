@@ -13,6 +13,9 @@
 
             <!-- Inputs -->
             <div>
+                <div th:if="${pageRef == updateAttraction}">
+                    <input type="hidden" th:field="*{id}">
+                </div>
                 <div th:if="${pageRef == 'newAttraction'}">
                     <label for="nameSave" class="form-label">Name</label>
                     <input type="text" id="nameSave" th:field="*{name}" placeholder="write name" required maxlength="25">

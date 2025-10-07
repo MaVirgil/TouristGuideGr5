@@ -21,7 +21,7 @@ public class AttractionRepository {
 
         attraction.setId(rs.getInt("id"));
         attraction.setName(rs.getString("name"));
-        attraction.setDescription(rs.getString("desc"));
+        attraction.setDescription(rs.getString("description"));
         attraction.setCity(rs.getString("city_name"));
         return attraction;
     };
@@ -31,7 +31,7 @@ public class AttractionRepository {
             rs.getString("name")
     );
 
-    public AttractionRepository(JdbcTemplate jdbcTemplate, AttractionService attractionService, DataSourceTransactionManager dataSourceTransactionManager){
+    public AttractionRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 
