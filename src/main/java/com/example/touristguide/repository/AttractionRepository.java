@@ -111,20 +111,37 @@ public class AttractionRepository {
         }
     }
 
-    public int editAttraction(TouristAttraction attractionToEdit) {
+    public TouristAttraction editAttraction(TouristAttraction attractionToEdit) {
+
+        int newCityId = this.getCityByName(attractionToEdit.getCity());
+        if (newCityId == -1) {
+            // Handle error: City not found (though you said it's successful)
+            System.err.println("Error: City '" + attractionToEdit.getCity() + "' not found during update.");
+            throw new RuntimeException("Cannot update attraction: City not found.");
+        }
 
         String updateQuery = """
             UPDATE Attraction
-            SET description = ?,
+            SET 
+                description = ?,
                 city_id = ?
             WHERE id = ?
             """;
 
         Object[] args = {
                 attractionToEdit.getDescription(),
-                this.getCityByName(attractionToEdit.getCity()),
+                newCityId,
                 attractionToEdit.getId()
         };
+
+
+        int rowsAffected = jdbcTemplate.update(updateQuery, args);
+
+        // Diagnostic step: Confirm the row was updated
+        if (rowsAffected == 0) {
+            System.err.println("Error: No row found to update for ID: " + attractionToEdit.getId());
+            throw new RuntimeException("Attraction update failed: ID not found.");
+        }
 
         List<String> tags = attractionToEdit.getSelectedTags();
 
@@ -137,7 +154,7 @@ public class AttractionRepository {
             this.addAttractionTagsByID(attractionToEdit.getId(), tagMap.get(tag));
         }
 
-        return jdbcTemplate.update(updateQuery, args);
+        return this.getAttractionById(attractionToEdit.getId());
 
     }
 

@@ -33,7 +33,7 @@ public class AttractionService {
     }
 
 
-    public int editAttraction(TouristAttraction attraction){
+    public TouristAttraction editAttraction(TouristAttraction attraction){
         /*Integer getCityId = repository.getCityByName(attraction.getCity());
 
         if(getCityId == null) {
@@ -64,7 +64,7 @@ public class AttractionService {
         ArrayList<Tag> newTags = attraction.getSelectedTags();
         String newCity = attraction.getCity();*/
 
-        return this.repository.editAttraction(attraction);
+        return repository.editAttraction(attraction);
     }
 
     public void deleteAttraction(int id){
