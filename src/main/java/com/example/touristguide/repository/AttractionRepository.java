@@ -14,6 +14,7 @@ public class AttractionRepository {
     private final List<TouristAttraction> attractions = new ArrayList<>();
     private final List<String> cities = new ArrayList<>();
 
+    private final JdbcTemplate jdbcTemplate;
 
     public AttractionRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
