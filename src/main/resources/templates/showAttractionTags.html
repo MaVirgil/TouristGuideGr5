@@ -18,9 +18,9 @@
             <aside class="left_sidebar"></aside>
             <section>
                 <article class="info-box">
-                    <h2 th:text="'Tags: ' + *{name}"></h2>
+                    <h2 th:text="'Tags: ' + ${attraction.name}"></h2>
                     <ul>
-                        <li th:each="tagList : ${attraction.getSelectedTags}" th:text="${tagList.name}"></li>
+                        <li th:each="tagList : ${attraction.getSelectedTags}" th:text="${tagList}"></li>
                     </ul>
                     <div th:replace="~{/fragments/_formElements :: formGoBack}"></div>
                 </article>

@@ -11,16 +11,16 @@
         De her burde nok smides ind i _formElements
         Alle tager imod et attraction object.
         -->
-        <a class="actions" th:fragment="showAttractionTags(attraction)" th:href="@{'/attractions/' + ${attraction.name} + '/tags'}">
+        <a class="actions" th:fragment="showAttractionTags(attraction)" th:href="@{'/attractions/' + ${attraction.id} + '/tags'}">
             <button type="submit">Tags</button>
         </a>
         <a th:fragment="newAttractionForm(pageRef)" th:href="@{'/attractions/add?pageRef=' + ${pageRef}}">
             <button type="submit">Register</button>
         </a>
-        <a class="actions" th:fragment="updateAttractionForm(attraction, pageRef)" th:href="@{'/attractions/' + ${attraction.name} + '/edit?pageRef=' + ${pageRef}}">
+        <a class="actions" th:fragment="updateAttractionForm(attraction, pageRef)" th:href="@{'/attractions/' + ${attraction.id} + '/edit?pageRef=' + ${pageRef}}">
             <button type="submit">Edit</button>
         </a>
-        <form class="actions" th:fragment="deleteAttraction(attraction)" th:action="@{'/attractions/delete/' + ${attraction.name}}" method="post">
+        <form class="actions" th:fragment="deleteAttraction(attraction)" th:action="@{'/attractions/delete/' + ${attraction.id}}" method="post">
             <button type="submit">Delete</button>
         </form>
 
