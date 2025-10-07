@@ -34,36 +34,6 @@ public class AttractionService {
 
 
     public TouristAttraction editAttraction(TouristAttraction attraction){
-        /*Integer getCityId = repository.getCityByName(attraction.getCity());
-
-        if(getCityId == null) {
-            System.err.println("Error: City " + attraction.getCity() + " not found");
-
-            return null;
-        }
-
-        TouristAttraction newAttraction = new TouristAttraction();
-
-        newAttraction.setId(attraction.getId());
-        newAttraction.setName(attraction.getName());
-        newAttraction.setDescription(attraction.getDescription());
-        ArrayList<Tag> newTags = attraction.getSelectedTags();
-
-        int rowsUpdated = repository.editAttraction(newAttraction);
-
-        repository.deleteTagsByAttractionID(attraction.getId());
-        for (Tag tag: newTags) {
-            repository.addAttractionTagsByID(attraction.getId(), tag.getId());
-        }
-
-        newAttraction.setSelectedTags(newTags);
-
-        int id = attraction.getId();
-        String name = attraction.getName();
-        String newDescription = attraction.getDescription();
-        ArrayList<Tag> newTags = attraction.getSelectedTags();
-        String newCity = attraction.getCity();*/
-
         return repository.editAttraction(attraction);
     }
 

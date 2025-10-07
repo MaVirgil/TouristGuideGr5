@@ -10,7 +10,7 @@ public class TouristAttraction {
     private String city;
     private List<String> selectedTags = new ArrayList<>();
 
-    public TouristAttraction(int id, String name, String description, String city, ArrayList<String> tagList) {
+    public TouristAttraction(int id, String name, String description, String city, List<String> tagList) {
         this.id = id;
         this.name = name;
         this.description = description;

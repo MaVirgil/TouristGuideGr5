@@ -67,14 +67,14 @@ public class AttractionController {
     public String editAttraction(@PathVariable int id, Model model,
                                  @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
         TouristAttraction attraction = service.getAttractionById(id);
-        //Tag[] tagList = Tag.values();
+        List<String> tagList = service.getAttractionById(id).getSelectedTags();
 
         if(attraction == null){
             throw new IllegalArgumentException("Attraction does not exist");
         }
 
         model.addAttribute("attraction", attraction);
-        //model.addAttribute("tags", tagList);
+        model.addAttribute("tags", tagList);
         model.addAttribute("cities", this.service.getCities());
         model.addAttribute("pageRef", pageRef);
 
