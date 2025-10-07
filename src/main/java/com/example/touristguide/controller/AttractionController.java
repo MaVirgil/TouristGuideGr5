@@ -55,7 +55,7 @@ public class AttractionController {
         TouristAttraction attractionToAdd = new TouristAttraction();
 
         model.addAttribute("attraction", attractionToAdd);
-        model.addAttribute("tags", Tags.values());
+        model.addAttribute("tags", service.getAllTagNames());
         model.addAttribute("cities", this.service.getCities());
         model.addAttribute("pageRef", pageRef);
 
