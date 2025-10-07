@@ -38,10 +38,10 @@ public class AttractionController {
         return "showAllAttractions";
     }
 
-    @GetMapping("/attractions/{name}")
-    public String getAttractionsByName(@PathVariable String name, Model model){
+    @GetMapping("/attractions/{id}")
+    public String getAttractionsByName(@PathVariable int id, Model model){
 
-        TouristAttraction attraction = service.getAttractionByName(name);
+        TouristAttraction attraction = service.getAttractionById(id);
 
         model.addAttribute("byName", attraction);
 

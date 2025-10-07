@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.tags.Param;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +60,7 @@ class AttractionControllerTest {
         TouristAttraction attraction = new TouristAttraction();
         attraction.setName("Tivoli");
 
-        when(attractionService.getAttractionByName("tivoli")).thenReturn(attraction);
+        when(attractionService.getAttractionById(1)).thenReturn(attraction);
 
         mockMvc.perform(get("/attractions/tivoli"))
                 .andExpect(status().isOk())
@@ -94,7 +93,7 @@ class AttractionControllerTest {
         final String attractionName = "Tivoli";
 
         //Defines the mocked objects behaviour when we run getAttractionByName and getCities (the return the testAttraction and mockCities
-        when(attractionService.getAttractionByName(attractionName)).thenReturn(testAttraction);
+        when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
         when(attractionService.getCities()).thenReturn(mockCities);
 
         //Runs a get on /attractions/{name}/edit
@@ -111,7 +110,7 @@ class AttractionControllerTest {
                 .andExpect(model().attribute("pageRef", is("updateAttraction")));
 
         verify(attractionService).getCities();
-        verify(attractionService).getAttractionByName(attractionName);
+        verify(attractionService).getAttractionById(attractionId);
 
     }
 
@@ -120,7 +119,7 @@ class AttractionControllerTest {
         final String notFoundAttraction = "NonExistingName";
 
         // Service returns null to simulate a non-existing name
-        when(attractionService.getAttractionByName(notFoundAttraction)).thenReturn(null);
+        when(attractionService.getAttractionById(notFoundAttraction)).thenReturn(null);
 
         // We perform the request and catch the wrapped ServletException
         ServletException thrownException = assertThrows(
@@ -136,7 +135,7 @@ class AttractionControllerTest {
         assertInstanceOf(IllegalArgumentException.class, rootCause, "ServletException skulle være IllegalArgumentException og var: " + rootCause.getClass().getName());
 
         // We verify the mocks
-        verify(attractionService, times(1)).getAttractionByName(notFoundAttraction);
+        verify(attractionService, times(1)).getAttractionById(notFoundAttraction);
         verify(attractionService, never()).getCities();
     }
 
@@ -146,7 +145,7 @@ class AttractionControllerTest {
         final String customRef = "showAttraction";
 
         //Defines the behaviour of the mocked object when a method is called on the object
-        when(attractionService.getAttractionByName(attractionName)).thenReturn(testAttraction);
+        when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
         when(attractionService.getCities()).thenReturn(mockCities);
 
         //Performs a get, adds the custom parameter and expects the pageRef to be the customRef

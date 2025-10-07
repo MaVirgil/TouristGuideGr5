@@ -1,76 +1,84 @@
 package com.example.touristguide.repository;
 
-import com.example.touristguide.model.Tags;
+import com.example.touristguide.model.Tag;
 import com.example.touristguide.model.TouristAttraction;
+import com.example.touristguide.service.AttractionService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
-import org.springframework.jdbc.*;
 
 import java.util.*;
 
 @Repository
 public class AttractionRepository {
 
-    private final List<TouristAttraction> attractions = new ArrayList<>();
-    private final List<String> cities = new ArrayList<>();
-
     private final JdbcTemplate jdbcTemplate;
 
-    public AttractionRepository(JdbcTemplate jdbcTemplate){
+    private final RowMapper<TouristAttraction> attractionMapper = (rs, rowNum) -> {
+        TouristAttraction attraction = new TouristAttraction();
+
+        attraction.setId(rs.getInt("id"));
+        attraction.setName(rs.getString("name"));
+        attraction.setDescription(rs.getString("desc"));
+        attraction.setCity(rs.getString("city_name"));
+        return attraction;
+    };
+
+    private final RowMapper<Tag> tagMapper = (rs, rowNum) -> new Tag(
+            rs.getInt("id"),
+            rs.getString("name")
+    );
+
+    public AttractionRepository(JdbcTemplate jdbcTemplate, AttractionService attractionService, DataSourceTransactionManager dataSourceTransactionManager){
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private void populateRepository() {
-        attractions.add(new TouristAttraction("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.CHILDFRIENDLY, Tags.CONCERT, Tags.RESTAURANT, Tags.ENTERTAINMENT))));
-        attractions.add(new TouristAttraction("Louisiana", "Famous art museum north of Copenhagen", "Humlebæk", new ArrayList<>(Arrays.asList(Tags.ART, Tags.NATURE))));
-        attractions.add(new TouristAttraction("ARoS", "Aarhus Art Museum", "Aarhus", new ArrayList<>(Arrays.asList(Tags.ART, Tags.RESTAURANT, Tags.MUSEUM))));
-        attractions.add(new TouristAttraction("Odense Zoo", "Animals form all over the world", "Odense", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
-        attractions.add(new TouristAttraction("Den blå planet", "Aquarium in Copenhagen", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
-        attractions.add(new TouristAttraction("Legoland", "LEGO amusement park", "Billund", new ArrayList<>(Arrays.asList(Tags.NATURE, Tags.CHILDFRIENDLY, Tags.ENTERTAINMENT))));
-
-        cities.add("Copenhagen");
-        cities.add("Aabenraa");
-        cities.add("Aalborg");
-        cities.add("Aarhus");
-        cities.add("Birkerød");
-        cities.add("Esbjerg");
-        cities.add("Fredericia");
-        cities.add("Frederiksberg");
-        cities.add("Helsingør");
-        cities.add("Herlev");
-        cities.add("Herning");
-        cities.add("Hillerød");
-        cities.add("Holbæk");
-        cities.add("Holstebro");
-        cities.add("Horsens");
-        cities.add("Kolding");
-        cities.add("Køge");
-        cities.add("Næstved");
-        cities.add("Odense");
-        cities.add("Randers");
-        cities.add("Ringsted");
-        cities.add("Roskilde");
-        cities.add("Silkeborg");
-        cities.add("Slagelse");
-        cities.add("Sønderborg");
-        cities.add("Svendborg");
-        cities.add("Vejle");
-        cities.add("Viborg");
-        Collections.sort(cities);
-    }
-
     public List<TouristAttraction> getAttractions() {
+
+        String attractionsQuery = """
+                SELECT A.id as id, A.name AS name, A.description AS description,
+                C.name AS city_name FROM Attraction A
+                INNER JOIN City C ON A.city_id = C.id
+                """;
+
+        //get list of attractions (without tagList)
+        List<TouristAttraction> attractions = jdbcTemplate.query(attractionsQuery, attractionMapper);
+
+
+        //Query to retrieve all tags for specific attraction
+        String tagListByIdQuery = """
+                SELECT Tag.name AS tag_name
+                FROM Tags_attraction_junction TAJ
+                INNER JOIN Tag ON Tag.id = TAJ.tag_id
+                WHERE TAJ.attraction_id = ?;
+                """;
+
+        //map tag names (as List<String>) to each attracion
+        for (TouristAttraction attraction : attractions) {
+            List<String> tagList = jdbcTemplate.queryForList(tagListByIdQuery, String.class, attraction.getId());
+            attraction.setSelectedTags(tagList);
+        }
+
         return attractions;
     }
 
     public List<String> getCities() {
-        return cities;
+
+        String query = """
+                SELECT name
+                FROM CITY
+                ORDER BY name;
+                """;
+
+        return jdbcTemplate.queryForList(query, String.class);
     }
 
-    public TouristAttraction getAttractionByName(String name) {
+    public TouristAttraction getAttractionById(int id) {
 
-        for (TouristAttraction attraction : attractions) {
-            if (attraction.getName().equalsIgnoreCase(name)) return attraction;
+        for (TouristAttraction attraction : this.getAttractions()) {
+            if (attraction.getId() == id) return attraction;
         }
 
         return null;

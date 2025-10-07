@@ -1,14 +1,16 @@
 package com.example.touristguide.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TouristAttraction {
     private String name;
     private String description;
     private String city;
-    private ArrayList<Tags> selectedTags = new ArrayList<>();
+    private List<String> selectedTags = new ArrayList<>();
 
-    public TouristAttraction(String name, String description, String city,ArrayList<Tags> tagList) {
+    public TouristAttraction(int id, String name, String description, String city, ArrayList<String> tagList) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.city = city;
