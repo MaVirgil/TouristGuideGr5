@@ -42,7 +42,7 @@ public class AttractionService {
         this.repository.editAttraction(name, newDescription, newCity, newTags);
     }
 
-    public void deleteAttraction(String name){
-        this.repository.deleteAttraction(name);
+    public void deleteAttraction(int id){
+        this.repository.deleteAttraction(id);
     }
 }

@@ -86,37 +86,123 @@ public class AttractionRepository {
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
 
-        //remove whitespaces from start and end of name
-        attraction.setName(attraction.getName().trim());
+        String checkSql = "SELECT COUNT(*) FROM Attraction WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, attraction.getId());
 
-        //check if attraction of same name already exists in list
-        if (this.getAttractionByName(attraction.getName()) != null) {
+        if(count != null && count > 0){
             return null;
         }
 
-        this.attractions.add(attraction);
+        String insertSql = "INSERT INTO Attraction (id, name, description, city_id, selectedTags) VALUES (?, ?, ?, ?, ?)";
+        int rows = jdbcTemplate.update(
+                insertSql,
+                attraction.getId(),
+                attraction.getName(),
+                attraction.getDescription(),
+                attraction.getCity(),
+                attraction.getSelectedTags()
+        );
 
-        return attraction;
+        if(rows > 0){
+            return attraction;
+        }
+        else {
+            return null;
+        }
     }
 
-    public TouristAttraction editAttraction(String attractionName, String newDescription, String newCity, ArrayList<Tags> newTagList) {
-        TouristAttraction attractionToEdit = getAttractionByName(attractionName);
+    public int editAttraction(TouristAttraction attractionToEdit) {
 
-        if (attractionToEdit != null) {
-            attractionToEdit.setDescription(newDescription);
-            attractionToEdit.setCity(newCity);
-            attractionToEdit.setSelectedTags(newTagList);
+        String updateQuery = """
+            UPDATE Attraction
+            SET description = ?,
+                city_id = ?
+            WHERE id = ?
+            """;
+
+        Object[] args = {
+                attractionToEdit.getDescription(),
+                this.getCityByName(attractionToEdit.getCity()),
+                attractionToEdit.getId()
+        };
+
+        List<String> tags = attractionToEdit.getSelectedTags();
+
+        this.deleteTagsByAttractionID(attractionToEdit.getId());
+
+        //repopulate junction table with new tags
+        Map<String, Integer> tagMap = this.getTags();
+
+        for (String tag : attractionToEdit.getSelectedTags()) {
+            this.addAttractionTagsByID(attractionToEdit.getId(), tagMap.get(tag));
         }
 
-        return attractionToEdit;
+        return jdbcTemplate.update(updateQuery, args);
+
     }
 
-    public TouristAttraction deleteAttraction(String attractionName) {
-        TouristAttraction attractionToDelete = getAttractionByName(attractionName);
+    public Map<String, Integer> getTags() {
 
-        attractions.remove(attractionToDelete);
+        String query = """
+                SELECT name, id
+                FROM Tag
+                """;
 
-        return attractionToDelete;
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList((query));
+
+        Map<String, Integer> resultset = new HashMap<>();
+        for(Map<String, Object> row : rows) {
+            resultset.put((String) row.get("name"), (Integer) row.get("id"));
+        }
+
+        return resultset;
+
+    }
+
+    public int deleteTagsByAttractionID(int attractionId){
+        String deleteSql = "DELETE FROM Tags_Attraction_Junction WHERE attraction_id = ?";
+
+        Object[] args = {
+                attractionId
+        };
+
+        return jdbcTemplate.update(deleteSql, args);
+    }
+
+    public int addAttractionTagsByID(int attractionId, int tagId){
+        String insertSql = "INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id) values (?, ?)";
+
+        Object[] args = {
+                attractionId,
+                tagId
+        };
+
+        return jdbcTemplate.update(insertSql, args);
+    }
+
+    public int getCityByName(String cityName) {
+        String selectSql = "SELECT * FROM City WHERE name = ?";
+
+        Object[] args = {
+                cityName
+        };
+
+        try {
+            return jdbcTemplate.queryForObject(selectSql, Integer.class, cityName);
+        } catch(EmptyResultDataAccessException e) {
+            System.out.println("City not found:" + e.getMessage());
+
+            return -1;
+        }
+    }
+
+    public int deleteAttraction(int id) {
+
+        String deleteFromJunctionTable = "DELETE FROM Tags_Attraction_Junction WHERE attraction_id = ?";
+        jdbcTemplate.update(deleteFromJunctionTable, id);
+
+        String deleteFromAttractionTable = "DELETE FROM Attraction WHERE id = ?";
+        return jdbcTemplate.update(deleteFromAttractionTable, id);
     }
 
 }

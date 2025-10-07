@@ -63,11 +63,11 @@ public class AttractionController {
     }
 
     //Includes a fall back in case pageRef is not send required = false, defaultValue = "updateAttraction"
-    @GetMapping("/attractions/{name}/edit")
-    public String editAttraction(@PathVariable String name, Model model,
+    @GetMapping("/attractions/{id}/edit")
+    public String editAttraction(@PathVariable int id, Model model,
                                  @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
-        TouristAttraction attraction = service.getAttractionByName(name);
-        Tags[] tagList = Tags.values();
+        TouristAttraction attraction = service.getAttractionById(id);
+        //Tag[] tagList = Tag.values();
 
         if(attraction == null){
             throw new IllegalArgumentException("Attraction does not exist");
@@ -81,9 +81,9 @@ public class AttractionController {
         return "updateAttractionForm";
     }
 
-    @GetMapping("/attractions/{name}/tags")
-    public String showAttractionTags(@PathVariable String name, Model model){
-        TouristAttraction attraction = service.getAttractionByName(name);
+    @GetMapping("/attractions/{id}/tags")
+    public String showAttractionTags(@PathVariable int id, Model model){
+        TouristAttraction attraction = service.getAttractionById(id);
 
         if(attraction == null){
             throw new IllegalArgumentException("Attraction does not exist");
@@ -114,10 +114,10 @@ public class AttractionController {
         return "redirect:/attractions";
     }
 
-    @PostMapping("/attractions/delete/{name}")
-    public String deleteAttraction(@PathVariable String name) {
+    @PostMapping("/attractions/delete/{id}")
+    public String deleteAttraction(@PathVariable int id) {
 
-        service.deleteAttraction(name);
+        service.deleteAttraction(id);
 
         return "redirect:/attractions";
     }
