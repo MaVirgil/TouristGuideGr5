@@ -67,7 +67,6 @@ public class AttractionController {
     public String editAttraction(@PathVariable int id, Model model,
                                  @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
         TouristAttraction attraction = service.getAttractionById(id);
-        List<String> tagList = service.getAttractionById(id).getSelectedTags();
 
         if(attraction == null){
             throw new IllegalArgumentException("Attraction does not exist");
