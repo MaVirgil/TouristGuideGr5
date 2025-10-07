@@ -294,6 +294,11 @@ public class AttractionRepository {
         return jdbcTemplate.update(deleteFromAttractionTable, id);
     }
 
+    public List<String> getAllTagNames(){
+        String sql = "SELECT name FROM Tag ORDER BY name";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
 }
 
 
