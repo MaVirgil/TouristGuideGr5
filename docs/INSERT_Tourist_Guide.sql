@@ -1,14 +1,14 @@
-INSERT INTO City (City_Name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
+INSERT IGNORE INTO City (Name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
 	("Birkerød"), ("Billund"), ("Esbjerg"), ("Fredericia"), ("Frederiksberg"), ("Helsingør"), ("Herlev"),
     ("Herning"), ("Hillerød"), ("Holbæk"), ("Holstebro"), ("Horsens"), ("Humlebæk"), ("Kolding"), ("Køge"),
     ("Næstved"), ("Odense"), ("Randers"), ("Ringsted"), ("Roskilde"), ("Silkeborg"),
     ("Slagelse"), ("Sønderborg"), ("Svendborg"), ("Vejle"), ("Viborg");
     
-INSERT INTO Tags (Tags_Name) VALUES ("Restaurant"), ("Gratis"), ("Børnevenlig"),
+INSERT IGNORE INTO Tag (Name) VALUES ("Restaurant"), ("Gratis"), ("Børnevenlig"),
 	("Kunst"), ("Museum"), ("Natur"), ("Underholdning"), ("Koncert");
 
-INSERT INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
-	SELECT A.column0, A.column1, C.City_ID
+INSERT IGNORE INTO Attraction (Name, Description, City_ID)
+	SELECT A.column0, A.column1, C.ID
     FROM
 		(VALUES
 			ROW("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen"),
@@ -19,10 +19,10 @@ INSERT INTO Attraction (Attraction_Name, Attraction_Desc, City_ID)
             ROW("Legoland", "LEGO amusement park", "Billund")
 		) AS A (column0, column1, City_Lookup)
 	JOIN
-		City AS C ON A.City_Lookup = C.City_Name;
+		City AS C ON A.City_Lookup = C.Name;
 
-INSERT INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
-	SELECT Att.Attraction_ID, T.Tags_ID
+INSERT IGNORE INTO Tags_Attraction_Junction (Attraction_ID, Tag_ID)
+	SELECT Att.ID, T.ID
 		FROM
 			(SELECT "Tivoli" AS Att_Lookup, "Restaurant" AS T_Lookup
             UNION ALL
@@ -36,9 +36,9 @@ INSERT INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
             UNION ALL
             SELECT "ARoS", "Museum"
             UNION ALL
-			SELECT "Louisianna", "Kunst"
+			SELECT "Louisiana", "Kunst"
             UNION ALL
-			SELECT "Louisianna", "Museum"
+			SELECT "Louisiana", "Museum"
             UNION ALL
 			SELECT "Odense Zoo", "Børnevenlig"
             UNION ALL
@@ -52,7 +52,7 @@ INSERT INTO Tags_Attraction_Junction (Attraction_ID, Tags_ID)
             UNION ALL
             SELECT "Legoland", "Restaurant"
             ) AS A
-            JOIN Attraction AS Att ON A.Att_Lookup = Att.Attraction_Name
-			JOIN Tags AS T ON A.T_Lookup = T.Tags_Name;
+            JOIN Attraction AS Att ON A.Att_Lookup = Att.Name
+			JOIN Tag AS T ON A.T_Lookup = T.Name;
             
     
