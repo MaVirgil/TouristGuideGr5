@@ -128,18 +128,6 @@ class AttractionControllerTest {
         verify(attractionService).getAttractionById(attractionId);
     }
 
-    @Test
-    void shouldRedirectAfterSave() throws Exception {
-
-        when(attractionService.addAttraction(any(TouristAttraction.class)))
-                .thenReturn(testAttraction);
-
-        mockMvc.perform(post("/attractions/save"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/attractions"));
-
-        verify(attractionService).addAttraction(any(TouristAttraction.class));
-    }
 
     @Test
     void shouldThrowIllegalArgumentException_editAttraction() {
@@ -179,6 +167,21 @@ class AttractionControllerTest {
         mockMvc.perform(get("/attractions/{name}/edit", attractionId)
                 .param("pageRef", customRef))
                 .andExpect(model().attribute("pageRef", customRef));
+    }
+
+    @Test
+    void shouldRedirectAfterSave() throws Exception {
+
+        when(attractionService.addAttraction(any(TouristAttraction.class)))
+                .thenReturn(testAttraction);
+
+        mockMvc.perform(post("/attractions/save")
+                .flashAttr("attraction", testAttraction))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/attractions"))
+                .andExpect(flash().attributeCount(0));
+
+        verify(attractionService).addAttraction(any(TouristAttraction.class));
     }
 
     /*
