@@ -129,6 +129,18 @@ class AttractionControllerTest {
         verify(attractionService).getAttractionById(attractionId);
     }
 
+    @Test
+    void shouldRedirectAfterSave() throws Exception {
+
+        when(attractionService.addAttraction(any(TouristAttraction.class)))
+                .thenReturn(testAttraction);
+
+        mockMvc.perform(post("/attractions/save"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/attractions"));
+
+        verify(attractionService).addAttraction(any(TouristAttraction.class));
+    }
 
     @Test
     void shouldThrowIllegalArgumentException_editAttraction() throws Exception {
