@@ -41,20 +41,20 @@
                                 Tager derudover imod et object attraction=$(attraction) for at korrekt kunne sende en videre.
                                 -->
                                 <div>
-                                    <a class="actions" th:href="@{'/attractions/' + ${attractions.name} + '/tags'}">
+                                    <a class="actions" th:href="@{'/attractions/' + ${attractions.id} + '/tags'}">
                                         <button type="submit">Tags</button>
                                     </a>
                                 </div>
                             </td>
                             <td>
                                 <div>
-                                    <a class="actions" th:href="@{/attractions/{name}/edit(name=${attractions.name},pageRef='updateAttraction')}">
+                                    <a class="actions" th:href="@{/attractions/{id}/edit(id=${attractions.id},pageRef='updateAttraction')}">
                                         <button type="submit">Edit</button>
                                     </a>
                                 </div>
                             </td>
                             <td>
-                                <form class="actions" th:action="@{'/attractions/delete/' + ${attractions.name}}" method="post">
+                                <form class="actions" th:action="@{'/attractions/delete/' + ${attractions.id}}" method="post">
                                     <button type="submit">Delete</button>
                                 </form>
                             </td>

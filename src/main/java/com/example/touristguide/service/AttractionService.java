@@ -1,11 +1,8 @@
 package com.example.touristguide.service;
 
-import com.example.touristguide.model.Tags;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,25 +21,23 @@ public class AttractionService {
         return this.repository.getCities();
     }
 
-    public TouristAttraction getAttractionByName(String name){
-        return this.repository.getAttractionByName(name);
+    public TouristAttraction getAttractionById(int id){
+        return this.repository.getAttractionById(id);
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
         return this.repository.addAttraction(attraction);
     }
 
-    public void editAttraction(TouristAttraction attraction){
 
-        String name = attraction.getName();
-        String newDescription = attraction.getDescription();
-        ArrayList<Tags> newTags = attraction.getSelectedTags();
-        String newCity = attraction.getCity();
-
-        this.repository.editAttraction(name, newDescription, newCity, newTags);
+    public TouristAttraction editAttraction(TouristAttraction attraction){
+        return repository.editAttraction(attraction);
     }
 
-    public void deleteAttraction(String name){
-        this.repository.deleteAttraction(name);
+    public List<String> getAllTagNames(){
+        return this.repository.getAllTagNames();
+    }
+    public void deleteAttraction(int id){
+        this.repository.deleteAttraction(id);
     }
 }
