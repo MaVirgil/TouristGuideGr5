@@ -177,6 +177,11 @@ public class AttractionRepository {
 
         int rowsAffected = jdbcTemplate.update(updateQuery, args);
 
+        //early return if 0 rows affected
+        if (rowsAffected == 0) {
+            return null;
+        }
+
         this.deleteTagsByAttractionID(attractionToEdit.getId());
 
         //repopulate junction table with new tags
@@ -186,10 +191,7 @@ public class AttractionRepository {
             this.addAttractionTagsByID(attractionToEdit.getId(), tagMap.get(tag));
         }
 
-        //return null if no attraction was found with given ID, otherwise return edited attraction
-        TouristAttraction toReturn = rowsAffected == 0 ? null : this.getAttractionById(attractionToEdit.getId());
-
-        return toReturn;
+        return this.getAttractionById(attractionToEdit.getId());
     }
 
     public Map<String, Integer> getTags() {
