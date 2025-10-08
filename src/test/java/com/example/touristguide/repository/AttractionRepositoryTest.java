@@ -18,10 +18,28 @@ public class AttractionRepositoryTest {
     private AttractionRepository repo;
 
     @Test
-    void selectAll(){
+    void shouldSelectGetAttractions(){
         List<TouristAttraction> attractionList = repo.getAttractions();
 
         assertThat(attractionList).isNotNull();
+        assertThat(attractionList.size()).isEqualTo(2);
+        assertThat(attractionList.getFirst().getName()).isEqualTo("ARoS");
+        assertThat(attractionList.getLast().getName()).isEqualTo("Tivoli");
+        assertThat(attractionList.getFirst().getCity()).isEqualTo("Aarhus");
+        assertThat(attractionList.getLast().getCity()).isEqualTo("Copenhagen");
+        assertThat(attractionList.getFirst().getSelectedTags()).contains("Kunst", "Museum");
+        assertThat(attractionList.getLast().getSelectedTags()).contains("Børnevenlig", "Restaurant", "Underholdning");
+    }
 
+    @Test
+    void shouldDeleteAttraction(){
+        List<TouristAttraction> attractionList = repo.getAttractions();
+
+        assertThat(attractionList).isNotNull();
+        assertThat(attractionList.size()).isEqualTo(2);
+        repo.deleteAttraction(1);
+        List<TouristAttraction> newList = repo.getAttractions();
+
+        assertThat(newList.size()).isEqualTo(1);
     }
 }
