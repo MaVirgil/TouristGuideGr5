@@ -1,3 +1,4 @@
+
 INSERT IGNORE INTO City (name) VALUES ("Copenhagen"), ("Aabenraa"), ("Aalborg"), ("Aarhus"),
 	("Birkerød"), ("Billund"), ("Esbjerg"), ("Fredericia"), ("Frederiksberg"), ("Helsingør"), ("Herlev"),
     ("Herning"), ("Hillerød"), ("Holbæk"), ("Holstebro"), ("Horsens"), ("Humlebæk"), ("Kolding"), ("Køge"),
@@ -36,9 +37,9 @@ INSERT IGNORE INTO Tags_Attraction_Junction (attraction_id, tag_id)
             UNION ALL
             SELECT "ARoS", "Museum"
             UNION ALL
-			SELECT "Louisianna", "Kunst"
+			SELECT "Louisiana", "Kunst"
             UNION ALL
-			SELECT "Louisianna", "Museum"
+			SELECT "Louisiana", "Museum"
             UNION ALL
 			SELECT "Odense Zoo", "Børnevenlig"
             UNION ALL
