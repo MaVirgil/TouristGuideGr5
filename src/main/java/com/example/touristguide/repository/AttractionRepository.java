@@ -82,7 +82,7 @@ public class AttractionRepository {
         INNER JOIN City C ON A.city_id = C.id
         LEFT JOIN Tags_Attraction_Junction TAJ ON A.id = TAJ.attraction_id
         LEFT JOIN Tag T ON TAJ.tag_id = T.id
-        GROUP BY A.id, A.name, A.description, C.name
+        GROUP BY A.id
         ORDER BY A.name;
         """;
 
