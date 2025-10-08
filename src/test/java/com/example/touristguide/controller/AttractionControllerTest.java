@@ -116,6 +116,21 @@ class AttractionControllerTest {
     }
 
     @Test
+    void shouldShowAttractionTags() throws Exception {
+        final int attractionId = 1;
+
+        when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
+
+        mockMvc.perform(get("/attractions/1/tags"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("showAttractionTags"))
+                .andExpect(model().attribute("attraction", testAttraction));
+
+        verify(attractionService).getAttractionById(attractionId);
+    }
+
+
+    @Test
     void shouldThrowIllegalArgumentException_editAttraction() throws Exception {
         final int notFoundAttraction = -1;
 
