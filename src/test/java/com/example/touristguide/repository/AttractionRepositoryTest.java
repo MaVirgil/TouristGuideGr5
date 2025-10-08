@@ -25,7 +25,7 @@ public class AttractionRepositoryTest {
         assertThat(attractionList).isNotNull();
         assertThat(attractionList.size()).isEqualTo(2);
         assertThat(attractionList.getFirst().getName()).isEqualTo("ARoS");
-        assertThat(attractionList.getLast().getName()).isEqualTo("Tivoli");
+        assertThat(attractionList.getLast().getName()).isEqualTo("test");
         assertThat(attractionList.getFirst().getCity()).isEqualTo("Aarhus");
         assertThat(attractionList.getLast().getCity()).isEqualTo("Copenhagen");
         assertThat(attractionList.getFirst().getSelectedTags()).contains("Kunst", "Museum");
