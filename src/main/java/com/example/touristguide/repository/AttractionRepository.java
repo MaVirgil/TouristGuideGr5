@@ -72,7 +72,7 @@ public class AttractionRepository {
     public List<TouristAttraction> getAttractions() {
 
         String query = """
-        SELECT 
+        SELECT
             A.id AS id,
             A.name AS name,
             A.description AS description,
@@ -193,7 +193,7 @@ public class AttractionRepository {
 
         String updateQuery = """
             UPDATE Attraction
-            SET 
+            SET
                 description = ?,
                 city_id = ?
             WHERE id = ?
@@ -208,7 +208,7 @@ public class AttractionRepository {
 
         int rowsAffected = jdbcTemplate.update(updateQuery, args);
 
-        // Diagnostic step: Confirm the row was updated
+        //Confirm the row was updated
         if (rowsAffected == 0) {
             System.err.println("Error: No row found to update for ID: " + attractionToEdit.getId());
             throw new RuntimeException("Attraction update failed: ID not found.");
@@ -254,6 +254,8 @@ public class AttractionRepository {
                 attractionId
         };
 
+
+
         return jdbcTemplate.update(deleteSql, args);
     }
 
@@ -286,12 +288,24 @@ public class AttractionRepository {
     }
 
     public int deleteAttraction(int id) {
-
-        String deleteFromJunctionTable = "DELETE FROM Tags_Attraction_Junction WHERE attraction_id = ?";
-        jdbcTemplate.update(deleteFromJunctionTable, id);
-
         String deleteFromAttractionTable = "DELETE FROM Attraction WHERE id = ?";
-        return jdbcTemplate.update(deleteFromAttractionTable, id);
+        String deleteFromJunctionTable = "DELETE FROM Tags_Attraction_Junction WHERE attraction_id = ?";
+
+        System.out.println("Attempting  to delete from junction table");
+        int rowsAffectedJunction = jdbcTemplate.update(deleteFromJunctionTable, id);
+
+        System.out.println("Attempting to delete from attraction table");
+        int rowsAffectedAttraction = jdbcTemplate.update(deleteFromAttractionTable, id);
+
+        System.out.println("Junction table attraction id deleted: " + id + ", rows affected: " + rowsAffectedJunction);
+
+        if(rowsAffectedAttraction == 1){
+            System.out.println("Deleted attraction with id:" + id + ", rows affected: " + rowsAffectedAttraction);
+        } else {
+            System.out.println("Could not delete from junction table");
+        }
+
+        return id;
     }
 
     public List<String> getAllTagNames(){

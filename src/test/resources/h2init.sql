@@ -1,0 +1,36 @@
+DROP DATABASE IF EXISTS tourist_guide;
+CREATE DATABASE tourist_guide
+	DEFAULT CHARACTER SET utf8mb4;
+USE tourist_guide;
+
+CREATE TABLE Tag (
+                     id INT NOT NULL UNIQUE AUTO_INCREMENT,
+                     name VARCHAR(50) NOT NULL UNIQUE,
+                     PRIMARY KEY (id)
+);
+
+CREATE TABLE City (
+                      id INT NOT NULL UNIQUE AUTO_INCREMENT,
+                      name VARCHAR(255) NOT NULL UNIQUE,
+                      PRIMARY KEY (id)
+);
+
+CREATE TABLE Attraction (
+                            id INT NOT NULL UNIQUE AUTO_INCREMENT,
+                            name VARCHAR(255) NOT NULL UNIQUE,
+                            description TINYTEXT NOT NULL,
+                            city_id INT NOT NULL,
+                            PRIMARY KEY (id),
+                            FOREIGN KEY (city_id) REFERENCES city (id)
+                                ON DELETE RESTRICT
+);
+
+CREATE TABLE Tags_Attraction_Junction (
+                                          attraction_id INT NOT NULL,
+                                          tag_id INT NOT NULL,
+                                          PRIMARY KEY (attraction_id, tag_id),
+                                          FOREIGN KEY (attraction_id) REFERENCES Attraction (id)
+                                              ON DELETE RESTRICT,
+                                          FOREIGN KEY (tag_id) REFERENCES tag (id)
+                                              ON DELETE RESTRICT
+);
