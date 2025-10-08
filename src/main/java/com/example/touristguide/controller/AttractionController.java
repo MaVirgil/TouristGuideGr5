@@ -102,16 +102,18 @@ public class AttractionController {
     public String saveAttraction(RedirectAttributes redirectAttributes, @ModelAttribute TouristAttraction attraction){
 
         if (service.addAttraction(attraction) == null) {
-            redirectAttributes.addFlashAttribute("failedToAddAttraction", true);
+            redirectAttributes.addFlashAttribute("failedToAdd", true);
         }
 
         return "redirect:/attractions";
     }
 
     @PostMapping("/attractions/update")
-    public String updateAttraction(@ModelAttribute TouristAttraction attraction){
+    public String updateAttraction(RedirectAttributes redirectAttributes, @ModelAttribute TouristAttraction attraction){
 
-        service.editAttraction(attraction);
+        if (service.editAttraction(attraction) == null) {
+            redirectAttributes.addFlashAttribute("failedToEdit", true);
+        }
 
         return "redirect:/attractions";
     }
