@@ -153,6 +153,7 @@ public class AttractionRepository {
     public TouristAttraction editAttraction(TouristAttraction attractionToEdit) {
 
         int newCityId = this.getCityByName(attractionToEdit.getCity());
+
         if (newCityId == -1) {
             // Handle error: City not found (though you said it's successful)
             System.err.println("Error: City '" + attractionToEdit.getCity() + "' not found during update.");
@@ -176,12 +177,6 @@ public class AttractionRepository {
 
         int rowsAffected = jdbcTemplate.update(updateQuery, args);
 
-        //Confirm the row was updated
-        if (rowsAffected == 0) {
-            System.err.println("Error: No row found to update for ID: " + attractionToEdit.getId());
-            throw new RuntimeException("Attraction update failed: ID not found.");
-        }
-
         this.deleteTagsByAttractionID(attractionToEdit.getId());
 
         //repopulate junction table with new tags
@@ -191,8 +186,10 @@ public class AttractionRepository {
             this.addAttractionTagsByID(attractionToEdit.getId(), tagMap.get(tag));
         }
 
-        return this.getAttractionById(attractionToEdit.getId());
+        //return null if no attraction was found with given ID, otherwise return edited attraction
+        TouristAttraction toReturn = rowsAffected == 0 ? null : this.getAttractionById(attractionToEdit.getId());
 
+        return toReturn;
     }
 
     public Map<String, Integer> getTags() {
