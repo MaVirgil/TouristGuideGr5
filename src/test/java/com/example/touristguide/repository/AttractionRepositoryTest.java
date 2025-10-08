@@ -22,5 +22,6 @@ public class AttractionRepositoryTest {
         List<TouristAttraction> attractionList = repo.getAttractions();
 
         assertThat(attractionList).isNotNull();
+
     }
 }

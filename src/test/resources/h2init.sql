@@ -1,8 +1,3 @@
-DROP TABLE IF EXIST Tag;
-DROP TABLE IF EXIST City;
-DROP TABLE IF EXIST Attraction;
-DROP TABLE IF EXIST Tags_Attraction_Junction;
-
 CREATE TABLE Tag (
                      id INT NOT NULL UNIQUE AUTO_INCREMENT,
                      name VARCHAR(50) NOT NULL UNIQUE,
@@ -18,7 +13,7 @@ CREATE TABLE City (
 CREATE TABLE Attraction (
                             id INT NOT NULL UNIQUE AUTO_INCREMENT,
                             name VARCHAR(255) NOT NULL UNIQUE,
-                            description TINYTEXT NOT NULL,
+                            description VARCHAR(255) NOT NULL,
                             city_id INT NOT NULL,
                             PRIMARY KEY (id),
                             FOREIGN KEY (city_id) REFERENCES city (id)
@@ -35,36 +30,46 @@ CREATE TABLE Tags_Attraction_Junction (
                                               ON DELETE RESTRICT
 );
 
-INSERT IGNORE INTO City (name) VALUES ("Copenhagen"), ("Aarhus");
 
-INSERT IGNORE INTO Tag (name) VALUES ("Børnevenlig"),
-	("Kunst"), ("Museum"), ("Underholdning"), ("Koncert");
+INSERT INTO City (name) VALUES ('Copenhagen'), ('Aarhus');
 
-INSERT IGNORE INTO Attraction (name, description, city_id)
-SELECT A.column0, A.column1, C.id
-FROM
-    (VALUES
-         ROW("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen"),
-         ROW("ARoS", "Aarhus Art Museum", "Aarhus"),
-    ) AS A (column0, column1, City_Lookup)
-        JOIN
-    City AS C ON A.City_Lookup = C.name;
+INSERT INTO Tag (name) VALUES
+                           ('Restaurant'), ('Gratis'), ('Børnevenlig'),
+                           ('Kunst'), ('Museum'), ('Underholdning'), ('Koncert');
 
-INSERT IGNORE INTO Tags_Attraction_Junction (attraction_id, tag_id)
+INSERT INTO Attraction (name, description, city_id)
+VALUES
+    ('Tivoli', 'Copenhagen’s largest amusement park',
+     (SELECT id FROM City WHERE name = 'Copenhagen')),
+    ('ARoS', 'Aarhus Art Museum',
+     (SELECT id FROM City WHERE name = 'Aarhus'));
+
+INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id)
 SELECT Att.id, T.id
-FROM
-    (SELECT "Tivoli" AS Att_Lookup, "Restaurant" AS T_Lookup
-     UNION ALL
-     SELECT "Tivoli", "Børnevenlig"
-     UNION ALL
-     SELECT "Tivoli", "Underholdning"
-     UNION ALL
-     SELECT "Tivoli", "Koncert"
-     UNION ALL
-     SELECT "ARoS", "Kunst"
-     UNION ALL
-     SELECT "ARoS", "Museum"
-     UNION ALL
-    ) AS A
-        JOIN Attraction AS Att ON A.Att_Lookup = Att.name
-        JOIN Tag AS T ON A.T_Lookup = T.name;
+FROM Attraction AS Att, Tag AS T
+WHERE Att.name = 'Tivoli' AND T.name = 'Restaurant';
+
+INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id)
+SELECT Att.id, T.id
+FROM Attraction AS Att, Tag AS T
+WHERE Att.name = 'Tivoli' AND T.name = 'Børnevenlig';
+
+INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id)
+SELECT Att.id, T.id
+FROM Attraction AS Att, Tag AS T
+WHERE Att.name = 'Tivoli' AND T.name = 'Underholdning';
+
+INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id)
+SELECT Att.id, T.id
+FROM Attraction AS Att, Tag AS T
+WHERE Att.name = 'Tivoli' AND T.name = 'Koncert';
+
+INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id)
+SELECT Att.id, T.id
+FROM Attraction AS Att, Tag AS T
+WHERE Att.name = 'ARoS' AND T.name = 'Kunst';
+
+INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id)
+SELECT Att.id, T.id
+FROM Attraction AS Att, Tag AS T
+WHERE Att.name = 'ARoS' AND T.name = 'Museum';
