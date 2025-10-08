@@ -16,12 +16,12 @@
         <div class="content_grid">
             <aside class="left_sidebar"></aside>
             <section>
-                <dialog th:open="${failedToAddAttraction}">
-                    <form>
-                        <p>Attractions cannot have duplicate names!</p>
-                        <button>OK</button>
-                    </form>
-                </dialog>
+                <div th:if="${failedToAdd}">
+                    <dialog th:replace="~{fragments/_commonElements :: errorBox(message='Could not add: Attractions cannot have duplicate names!')}"></dialog>
+                </div>
+                <div th:if="${failedToEdit}">
+                    <dialog th:replace="~{fragments/_commonElements :: errorBox(message='Failed to update attraction! Try again')}"></dialog>
+                </div>
                 <article class="info-box">
                     <h1>Tourist Attractions</h1>
                     <table>
