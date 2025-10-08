@@ -16,13 +16,13 @@
         <div class="content_grid">
             <aside class="left_sidebar"></aside>
             <section>
-                <article class="info-box">
+                <article class="info-box" th:object="${byName}">
                     <h2 th:text="*{name}"></h2>
                     <p th:text="*{description}"></p>
                     <p th:text="*{city}"></p>
                     <table>
                         <tr th:each="tags :${byName.getSelectedTags}">
-                            <td th:text="${tags.name}"></td>
+                            <td th:text="${tags}"></td>
                         </tr>
                     </table>
                 </article>
