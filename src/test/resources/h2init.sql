@@ -1,3 +1,6 @@
+
+DROP ALL OBJECTS;
+
 CREATE TABLE Tag (
                      id INT NOT NULL UNIQUE AUTO_INCREMENT,
                      name VARCHAR(50) NOT NULL UNIQUE,
