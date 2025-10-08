@@ -34,3 +34,37 @@ CREATE TABLE Tags_Attraction_Junction (
                                           FOREIGN KEY (tag_id) REFERENCES tag (id)
                                               ON DELETE RESTRICT
 );
+
+INSERT IGNORE INTO City (name) VALUES ("Copenhagen"), ("Aarhus");
+
+INSERT IGNORE INTO Tag (name) VALUES ("Børnevenlig"),
+	("Kunst"), ("Museum"), ("Underholdning"), ("Koncert");
+
+INSERT IGNORE INTO Attraction (name, description, city_id)
+SELECT A.column0, A.column1, C.id
+FROM
+    (VALUES
+         ROW("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen"),
+         ROW("ARoS", "Aarhus Art Museum", "Aarhus"),
+    ) AS A (column0, column1, City_Lookup)
+        JOIN
+    City AS C ON A.City_Lookup = C.name;
+
+INSERT IGNORE INTO Tags_Attraction_Junction (attraction_id, tag_id)
+SELECT Att.id, T.id
+FROM
+    (SELECT "Tivoli" AS Att_Lookup, "Restaurant" AS T_Lookup
+     UNION ALL
+     SELECT "Tivoli", "Børnevenlig"
+     UNION ALL
+     SELECT "Tivoli", "Underholdning"
+     UNION ALL
+     SELECT "Tivoli", "Koncert"
+     UNION ALL
+     SELECT "ARoS", "Kunst"
+     UNION ALL
+     SELECT "ARoS", "Museum"
+     UNION ALL
+    ) AS A
+        JOIN Attraction AS Att ON A.Att_Lookup = Att.name
+        JOIN Tag AS T ON A.T_Lookup = T.name;

@@ -34,12 +34,15 @@ class AttractionControllerTest {
 
     private TouristAttraction testAttraction;
     private List<String> mockCities;
+    private List<String> expectedTags;
 
     //Setup basic objects for all Tests, less repetition in each test case
     @BeforeEach
     void setup(){
         testAttraction = new TouristAttraction(1, "Tivoli", "Forlystelsespark", "Copenhagen", new ArrayList<>(Arrays.asList("Børnevenlig", "underholdning")));
         mockCities = Arrays.asList("Copenhagen", "Aarhus");
+        expectedTags = Arrays.asList("Restaurant", "Gratis", "Børnevenlig",
+                "Kunst", "Museum", "Natur", "Underholdning", "Koncert");
     }
 
     /*
@@ -57,28 +60,25 @@ class AttractionControllerTest {
     @Test
     void shouldShowAttractionByName() throws Exception {
 
-        TouristAttraction attraction = new TouristAttraction();
-        attraction.setName("Tivoli");
+        when(attractionService.getAttractionById(1)).thenReturn(testAttraction);
 
-        when(attractionService.getAttractionById(1)).thenReturn(attraction);
-
-        mockMvc.perform(get("/attractions/tivoli"))
+        mockMvc.perform(get("/attractions/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("showAttraction"))
-                .andExpect(model().attribute("byName", attraction));
+                .andExpect(model().attribute("byName", testAttraction));
     }
 
     @Test
     void shouldAddAttraction() throws Exception {
-        Object[] expectedTags = Tags.values();
 
         when(attractionService.getCities()).thenReturn(mockCities);
+        when(attractionService.getAllTagNames()).thenReturn(expectedTags);
 
         mockMvc.perform(get("/attractions/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("newAttractionForm"))
 
-                //Uses isA to evaluate objects values and not their instances
+                //Uses isA to evaluate if it an object of Type and not their instances
                 //Uses is to evaluate values
                 .andExpect(model().attribute("attraction", isA(TouristAttraction.class)))
                 .andExpect(model().attribute("tags", is(expectedTags)))
@@ -95,6 +95,7 @@ class AttractionControllerTest {
         //Defines the mocked objects behaviour when we run getAttractionByName and getCities (the return the testAttraction and mockCities
         when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
         when(attractionService.getCities()).thenReturn(mockCities);
+        when(attractionService.getAllTagNames()).thenReturn(expectedTags);
 
         //Runs a get on /attractions/{name}/edit
         mockMvc.perform(get("/attractions/{name}/edit", attractionId))
@@ -105,7 +106,7 @@ class AttractionControllerTest {
                 //isA compares that the object is of the correct object type otherwise it would test if the two objects have the same reference (they do not)
                 .andExpect(model().attribute("attraction", isA(TouristAttraction.class)))
                 //is compares the object value with the expected value
-                .andExpect(model().attribute("tags", is(Tags.values())))
+                .andExpect(model().attribute("tags", is(expectedTags)))
                 .andExpect(model().attribute("cities", is(mockCities)))
                 .andExpect(model().attribute("pageRef", is("updateAttraction")));
 
