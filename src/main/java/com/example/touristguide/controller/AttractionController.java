@@ -1,6 +1,5 @@
 package com.example.touristguide.controller;
 
-import com.example.touristguide.model.Tags;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.service.AttractionService;
 import org.springframework.stereotype.Controller;
@@ -38,10 +37,14 @@ public class AttractionController {
         return "showAllAttractions";
     }
 
-    @GetMapping("/attractions/{name}")
-    public String getAttractionsByName(@PathVariable String name, Model model){
+    @GetMapping("/attractions/{id}")
+    public String getAttractionsByName(@PathVariable int id, Model model){
 
-        TouristAttraction attraction = service.getAttractionByName(name);
+        TouristAttraction attraction = service.getAttractionById(id);
+
+        //Debugging
+        System.out.println("Fetched attraction: " +attraction);
+        System.out.println("Attraction name: " + attraction.getName());
 
         model.addAttribute("byName", attraction);
 
@@ -55,7 +58,7 @@ public class AttractionController {
         TouristAttraction attractionToAdd = new TouristAttraction();
 
         model.addAttribute("attraction", attractionToAdd);
-        model.addAttribute("tags", Tags.values());
+        model.addAttribute("tags", service.getAllTagNames());
         model.addAttribute("cities", this.service.getCities());
         model.addAttribute("pageRef", pageRef);
 
@@ -63,27 +66,26 @@ public class AttractionController {
     }
 
     //Includes a fall back in case pageRef is not send required = false, defaultValue = "updateAttraction"
-    @GetMapping("/attractions/{name}/edit")
-    public String editAttraction(@PathVariable String name, Model model,
+    @GetMapping("/attractions/{id}/edit")
+    public String editAttraction(@PathVariable int id, Model model,
                                  @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
-        TouristAttraction attraction = service.getAttractionByName(name);
-        Tags[] tagList = Tags.values();
+        TouristAttraction attraction = service.getAttractionById(id);
 
         if(attraction == null){
             throw new IllegalArgumentException("Attraction does not exist");
         }
 
         model.addAttribute("attraction", attraction);
-        model.addAttribute("tags", tagList);
+        model.addAttribute("tags", service.getAllTagNames());
         model.addAttribute("cities", this.service.getCities());
         model.addAttribute("pageRef", pageRef);
 
         return "updateAttractionForm";
     }
 
-    @GetMapping("/attractions/{name}/tags")
-    public String showAttractionTags(@PathVariable String name, Model model){
-        TouristAttraction attraction = service.getAttractionByName(name);
+    @GetMapping("/attractions/{id}/tags")
+    public String showAttractionTags(@PathVariable int id, Model model){
+        TouristAttraction attraction = service.getAttractionById(id);
 
         if(attraction == null){
             throw new IllegalArgumentException("Attraction does not exist");
@@ -114,10 +116,10 @@ public class AttractionController {
         return "redirect:/attractions";
     }
 
-    @PostMapping("/attractions/delete/{name}")
-    public String deleteAttraction(@PathVariable String name) {
+    @PostMapping("/attractions/delete/{id}")
+    public String deleteAttraction(@PathVariable int id) {
 
-        service.deleteAttraction(name);
+        service.deleteAttraction(id);
 
         return "redirect:/attractions";
     }

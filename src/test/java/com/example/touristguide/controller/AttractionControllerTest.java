@@ -1,6 +1,5 @@
 package com.example.touristguide.controller;
 
-import com.example.touristguide.model.Tags;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.service.AttractionService;
 import jakarta.servlet.ServletException;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.tags.Param;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,12 +33,15 @@ class AttractionControllerTest {
 
     private TouristAttraction testAttraction;
     private List<String> mockCities;
+    private List<String> expectedTags;
 
     //Setup basic objects for all Tests, less repetition in each test case
     @BeforeEach
     void setup(){
-        testAttraction = new TouristAttraction("Tivoli", "Forlystelsespark", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY)));
+        testAttraction = new TouristAttraction(1, "Tivoli", "Forlystelsespark", "Copenhagen", new ArrayList<>(Arrays.asList("Børnevenlig", "underholdning")));
         mockCities = Arrays.asList("Copenhagen", "Aarhus");
+        expectedTags = Arrays.asList("Restaurant", "Gratis", "Børnevenlig",
+                "Kunst", "Museum", "Natur", "Underholdning", "Koncert");
     }
 
     /*
@@ -58,28 +59,25 @@ class AttractionControllerTest {
     @Test
     void shouldShowAttractionByName() throws Exception {
 
-        TouristAttraction attraction = new TouristAttraction();
-        attraction.setName("Tivoli");
+        when(attractionService.getAttractionById(1)).thenReturn(testAttraction);
 
-        when(attractionService.getAttractionByName("tivoli")).thenReturn(attraction);
-
-        mockMvc.perform(get("/attractions/tivoli"))
+        mockMvc.perform(get("/attractions/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("showAttraction"))
-                .andExpect(model().attribute("byName", attraction));
+                .andExpect(model().attribute("byName", testAttraction));
     }
 
     @Test
     void shouldAddAttraction() throws Exception {
-        Object[] expectedTags = Tags.values();
 
         when(attractionService.getCities()).thenReturn(mockCities);
+        when(attractionService.getAllTagNames()).thenReturn(expectedTags);
 
         mockMvc.perform(get("/attractions/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("newAttractionForm"))
 
-                //Uses isA to evaluate objects values and not their instances
+                //Uses isA to evaluate if it an object of Type and not their instances
                 //Uses is to evaluate values
                 .andExpect(model().attribute("attraction", isA(TouristAttraction.class)))
                 .andExpect(model().attribute("tags", is(expectedTags)))
@@ -91,14 +89,15 @@ class AttractionControllerTest {
 
     @Test
     void shouldShowEditAttraction() throws Exception {
-        final String attractionName = "Tivoli";
+        final int attractionId = 1;
 
         //Defines the mocked objects behaviour when we run getAttractionByName and getCities (the return the testAttraction and mockCities
-        when(attractionService.getAttractionByName(attractionName)).thenReturn(testAttraction);
+        when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
         when(attractionService.getCities()).thenReturn(mockCities);
+        when(attractionService.getAllTagNames()).thenReturn(expectedTags);
 
         //Runs a get on /attractions/{name}/edit
-        mockMvc.perform(get("/attractions/{name}/edit", attractionName))
+        mockMvc.perform(get("/attractions/{name}/edit", attractionId))
                 //Expects a status().isOk() return
                 .andExpect(status().isOk())
                 //Expects view name is updateAttractionForm
@@ -106,26 +105,41 @@ class AttractionControllerTest {
                 //isA compares that the object is of the correct object type otherwise it would test if the two objects have the same reference (they do not)
                 .andExpect(model().attribute("attraction", isA(TouristAttraction.class)))
                 //is compares the object value with the expected value
-                .andExpect(model().attribute("tags", is(Tags.values())))
+                .andExpect(model().attribute("tags", is(expectedTags)))
                 .andExpect(model().attribute("cities", is(mockCities)))
                 .andExpect(model().attribute("pageRef", is("updateAttraction")));
 
         verify(attractionService).getCities();
-        verify(attractionService).getAttractionByName(attractionName);
+        verify(attractionService).getAttractionById(attractionId);
 
     }
 
     @Test
-    void shouldThrowIllegalArgumentException_editAttraction() throws Exception {
-        final String notFoundAttraction = "NonExistingName";
+    void shouldShowAttractionTags() throws Exception {
+        final int attractionId = 1;
+
+        when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
+
+        mockMvc.perform(get("/attractions/1/tags"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("showAttractionTags"))
+                .andExpect(model().attribute("attraction", testAttraction));
+
+        verify(attractionService).getAttractionById(attractionId);
+    }
+
+
+    @Test
+    void shouldThrowIllegalArgumentException_editAttraction() {
+        final int notFoundAttraction = -1;
 
         // Service returns null to simulate a non-existing name
-        when(attractionService.getAttractionByName(notFoundAttraction)).thenReturn(null);
+        when(attractionService.getAttractionById(notFoundAttraction)).thenReturn(null);
 
         // We perform the request and catch the wrapped ServletException
         ServletException thrownException = assertThrows(
                 ServletException.class,
-                () -> mockMvc.perform(get("/attractions/{name}/edit", notFoundAttraction))
+                () -> mockMvc.perform(get("/attractions/{id}/edit", notFoundAttraction))
                         .andReturn()
         );
 
@@ -136,21 +150,21 @@ class AttractionControllerTest {
         assertInstanceOf(IllegalArgumentException.class, rootCause, "ServletException skulle være IllegalArgumentException og var: " + rootCause.getClass().getName());
 
         // We verify the mocks
-        verify(attractionService, times(1)).getAttractionByName(notFoundAttraction);
+        verify(attractionService, times(1)).getAttractionById(notFoundAttraction);
         verify(attractionService, never()).getCities();
     }
 
     @Test
     void shouldUseCustomValuePageRef_editAttraction() throws Exception {
-        final String attractionName = "Tivoli";
+        final int attractionId = 1;
         final String customRef = "showAttraction";
 
         //Defines the behaviour of the mocked object when a method is called on the object
-        when(attractionService.getAttractionByName(attractionName)).thenReturn(testAttraction);
+        when(attractionService.getAttractionById(attractionId)).thenReturn(testAttraction);
         when(attractionService.getCities()).thenReturn(mockCities);
 
         //Performs a get, adds the custom parameter and expects the pageRef to be the customRef
-        mockMvc.perform(get("/attractions/{name}/edit", attractionName)
+        mockMvc.perform(get("/attractions/{name}/edit", attractionId)
                 .param("pageRef", customRef))
                 .andExpect(model().attribute("pageRef", customRef));
     }
@@ -160,6 +174,22 @@ class AttractionControllerTest {
      *                      POST Tests
      * ====================================================
      */
+
+    @Test
+    void shouldRedirectAfterSave() throws Exception {
+
+        when(attractionService.addAttraction(any(TouristAttraction.class)))
+                .thenReturn(testAttraction);
+
+        mockMvc.perform(post("/attractions/save")
+                .flashAttr("attraction", testAttraction))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/attractions"))
+                .andExpect(flash().attributeCount(0));
+
+        verify(attractionService).addAttraction(any(TouristAttraction.class));
+    }
+
 
     @Test
     void shouldUpdateAttraction() throws Exception {

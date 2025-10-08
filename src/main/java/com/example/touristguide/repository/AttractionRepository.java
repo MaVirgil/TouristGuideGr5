@@ -1,111 +1,282 @@
 package com.example.touristguide.repository;
 
-import com.example.touristguide.model.Tags;
 import com.example.touristguide.model.TouristAttraction;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.*;
 
 @Repository
 public class AttractionRepository {
 
-    private final List<TouristAttraction> attractions = new ArrayList<>();
-    private final List<String> cities = new ArrayList<>();
+    private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<TouristAttraction> attractionRowMapper = (rs, rowNum) -> {
+        TouristAttraction attraction = new TouristAttraction();
+        attraction.setId(rs.getInt("id"));
+        attraction.setName(rs.getString("name"));
+        attraction.setDescription(rs.getString("description"));
+        attraction.setCity(rs.getString("city_name"));
 
-    public AttractionRepository(){
-        populateRepository();
-    }
+        String tagsString = rs.getString("tags");
+        if (tagsString != null) {
+            List<String> tags = Arrays.asList(tagsString.split(","));
+            attraction.setSelectedTags(tags);
+        } else {
+            attraction.setSelectedTags(Collections.emptyList());
+        }
+        return attraction;
+    };
 
-    private void populateRepository() {
-        attractions.add(new TouristAttraction("Tivoli", "Copenhagen’s largest amusement park", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.CHILDFRIENDLY, Tags.CONCERT, Tags.RESTAURANT, Tags.ENTERTAINMENT))));
-        attractions.add(new TouristAttraction("Louisiana", "Famous art museum north of Copenhagen", "Humlebæk", new ArrayList<>(Arrays.asList(Tags.ART, Tags.NATURE))));
-        attractions.add(new TouristAttraction("ARoS", "Aarhus Art Museum", "Aarhus", new ArrayList<>(Arrays.asList(Tags.ART, Tags.RESTAURANT, Tags.MUSEUM))));
-        attractions.add(new TouristAttraction("Odense Zoo", "Animals form all over the world", "Odense", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
-        attractions.add(new TouristAttraction("Den blå planet", "Aquarium in Copenhagen", "Copenhagen", new ArrayList<>(Arrays.asList(Tags.ENTERTAINMENT, Tags.CHILDFRIENDLY, Tags.NATURE))));
-        attractions.add(new TouristAttraction("Legoland", "LEGO amusement park", "Billund", new ArrayList<>(Arrays.asList(Tags.NATURE, Tags.CHILDFRIENDLY, Tags.ENTERTAINMENT))));
-
-        cities.add("Copenhagen");
-        cities.add("Aabenraa");
-        cities.add("Aalborg");
-        cities.add("Aarhus");
-        cities.add("Birkerød");
-        cities.add("Esbjerg");
-        cities.add("Fredericia");
-        cities.add("Frederiksberg");
-        cities.add("Helsingør");
-        cities.add("Herlev");
-        cities.add("Herning");
-        cities.add("Hillerød");
-        cities.add("Holbæk");
-        cities.add("Holstebro");
-        cities.add("Horsens");
-        cities.add("Kolding");
-        cities.add("Køge");
-        cities.add("Næstved");
-        cities.add("Odense");
-        cities.add("Randers");
-        cities.add("Ringsted");
-        cities.add("Roskilde");
-        cities.add("Silkeborg");
-        cities.add("Slagelse");
-        cities.add("Sønderborg");
-        cities.add("Svendborg");
-        cities.add("Vejle");
-        cities.add("Viborg");
-        Collections.sort(cities);
+    public AttractionRepository(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<TouristAttraction> getAttractions() {
-        return attractions;
+
+        String query = """
+        SELECT
+            A.id AS id,
+            A.name AS name,
+            A.description AS description,
+            C.name AS city_name,
+            GROUP_CONCAT(T.name SEPARATOR ',') AS tags
+        FROM Attraction A
+        INNER JOIN City C ON A.city_id = C.id
+        LEFT JOIN Tags_Attraction_Junction TAJ ON A.id = TAJ.attraction_id
+        LEFT JOIN Tag T ON TAJ.tag_id = T.id
+        GROUP BY A.id
+        ORDER BY A.name;
+        """;
+
+        return jdbcTemplate.query(query, attractionRowMapper);
     }
 
     public List<String> getCities() {
-        return cities;
+
+        String query = """
+                SELECT name
+                FROM CITY
+                ORDER BY name;
+                """;
+
+        return jdbcTemplate.queryForList(query, String.class);
     }
 
-    public TouristAttraction getAttractionByName(String name) {
+    public TouristAttraction getAttractionById(int id) {
 
-        for (TouristAttraction attraction : attractions) {
-            if (attraction.getName().equalsIgnoreCase(name)) return attraction;
-        }
+        String query = """
+        
+                SELECT
+            A.id AS id,
+            A.name AS name,
+            A.description AS description,
+            C.name AS city_name,
+            GROUP_CONCAT(T.name SEPARATOR ',') AS tags
+        FROM Attraction A
+        INNER JOIN City C ON A.city_id = C.id
+        LEFT JOIN Tags_Attraction_Junction TAJ ON A.id = TAJ.attraction_id
+        LEFT JOIN Tag T ON TAJ.tag_id = T.id
+        WHERE A.id = ?
+        GROUP BY A.id
+        ORDER BY A.name;
+        """;
 
-        return null;
+        return jdbcTemplate.queryForObject(query, attractionRowMapper, id);
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
 
-        //remove whitespaces from start and end of name
-        attraction.setName(attraction.getName().trim());
+        String name = attraction.getName().trim();
+        attraction.setName(name);
 
-        //check if attraction of same name already exists in list
-        if (this.getAttractionByName(attraction.getName()) != null) {
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("Attraction name must not be empty");
+        }
+
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM Attraction WHERE name = ?", Integer.class, name);
+
+        if (count != null && count > 0) {
             return null;
         }
 
-        this.attractions.add(attraction);
+        int cityId = getCityByName(attraction.getCity());
+        if (cityId == -1) {
+            throw new RuntimeException("City not found: " + attraction.getCity());
+        }
 
+        String insertSql = "INSERT INTO Attraction (name, description, city_id) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, attraction.getName());
+                ps.setString(2, attraction.getDescription());
+                ps.setInt(3, cityId);
+                return ps;
+            }, keyHolder);
+        } catch (DuplicateKeyException e) {
+            return null;
+        }
+
+        Number generatedKey = keyHolder.getKey();
+        if (generatedKey == null) {
+            throw new RuntimeException("Failed to obtain generated key for Attraction");
+        }
+        int newAttractionId = generatedKey.intValue();
+        attraction.setId(newAttractionId);
+
+        Map<String, Integer> tagMap = getTags();
+        if (attraction.getSelectedTags() != null) {
+            for (String tagName : attraction.getSelectedTags()) {
+                Integer tagId = tagMap.get(tagName);
+                if (tagId == null) {
+                    jdbcTemplate.update("INSERT INTO Tag (name) VALUES (?)", tagName);
+                    tagId = jdbcTemplate.queryForObject("SELECT id FROM Tag WHERE name = ?", Integer.class, tagName);
+                    tagMap.put(tagName, tagId);
+                }
+                addAttractionTagsByID(newAttractionId, tagId);
+            }
+        }
         return attraction;
     }
 
-    public TouristAttraction editAttraction(String attractionName, String newDescription, String newCity, ArrayList<Tags> newTagList) {
-        TouristAttraction attractionToEdit = getAttractionByName(attractionName);
+    public TouristAttraction editAttraction(TouristAttraction attractionToEdit) {
 
-        if (attractionToEdit != null) {
-            attractionToEdit.setDescription(newDescription);
-            attractionToEdit.setCity(newCity);
-            attractionToEdit.setSelectedTags(newTagList);
+        int newCityId = this.getCityByName(attractionToEdit.getCity());
+        if (newCityId == -1) {
+            // Handle error: City not found (though you said it's successful)
+            System.err.println("Error: City '" + attractionToEdit.getCity() + "' not found during update.");
+            throw new RuntimeException("Cannot update attraction: City not found.");
         }
 
-        return attractionToEdit;
+        String updateQuery = """
+            UPDATE Attraction
+            SET
+                description = ?,
+                city_id = ?
+            WHERE id = ?
+            """;
+
+        Object[] args = {
+                attractionToEdit.getDescription(),
+                newCityId,
+                attractionToEdit.getId()
+        };
+
+
+        int rowsAffected = jdbcTemplate.update(updateQuery, args);
+
+        //Confirm the row was updated
+        if (rowsAffected == 0) {
+            System.err.println("Error: No row found to update for ID: " + attractionToEdit.getId());
+            throw new RuntimeException("Attraction update failed: ID not found.");
+        }
+
+        this.deleteTagsByAttractionID(attractionToEdit.getId());
+
+        //repopulate junction table with new tags
+        Map<String, Integer> tagMap = this.getTags();
+
+        for (String tag : attractionToEdit.getSelectedTags()) {
+            this.addAttractionTagsByID(attractionToEdit.getId(), tagMap.get(tag));
+        }
+
+        return this.getAttractionById(attractionToEdit.getId());
+
     }
 
-    public TouristAttraction deleteAttraction(String attractionName) {
-        TouristAttraction attractionToDelete = getAttractionByName(attractionName);
+    public Map<String, Integer> getTags() {
 
-        attractions.remove(attractionToDelete);
+        String query = """
+                SELECT name, id
+                FROM Tag
+                """;
 
-        return attractionToDelete;
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList((query));
+
+        Map<String, Integer> resultset = new HashMap<>();
+        for(Map<String, Object> row : rows) {
+            resultset.put((String) row.get("name"), (Integer) row.get("id"));
+        }
+
+        return resultset;
+
+    }
+
+    public int deleteTagsByAttractionID(int attractionId){
+        String deleteSql = "DELETE FROM Tags_Attraction_Junction WHERE attraction_id = ?";
+
+        Object[] args = {
+                attractionId
+        };
+
+
+
+        return jdbcTemplate.update(deleteSql, args);
+    }
+
+    public int addAttractionTagsByID(int attractionId, int tagId){
+        String insertSql = "INSERT INTO Tags_Attraction_Junction (attraction_id, tag_id) values (?, ?)";
+
+        Object[] args = {
+                attractionId,
+                tagId
+        };
+
+        return jdbcTemplate.update(insertSql, args);
+    }
+
+    public int getCityByName(String cityName) {
+        String selectSql = "SELECT id FROM City WHERE name = ?";
+
+        try {
+            System.out.println("Looking up city: " + cityName);
+            int cityId = jdbcTemplate.queryForObject(selectSql, Integer.class, cityName);
+            System.out.println("Found city:" + cityId);
+
+            return cityId;
+
+        } catch(EmptyResultDataAccessException e) {
+            System.out.println("City not found:" + cityName);
+
+            return -1;
+        }
+    }
+
+    public int deleteAttraction(int id) {
+        String deleteFromAttractionTable = "DELETE FROM Attraction WHERE id = ?";
+        String deleteFromJunctionTable = "DELETE FROM Tags_Attraction_Junction WHERE attraction_id = ?";
+
+        System.out.println("Attempting  to delete from junction table");
+        int rowsAffectedJunction = jdbcTemplate.update(deleteFromJunctionTable, id);
+
+        System.out.println("Attempting to delete from attraction table");
+        int rowsAffectedAttraction = jdbcTemplate.update(deleteFromAttractionTable, id);
+
+        System.out.println("Junction table attraction id deleted: " + id + ", rows affected: " + rowsAffectedJunction);
+
+        if(rowsAffectedAttraction == 1){
+            System.out.println("Deleted attraction with id:" + id + ", rows affected: " + rowsAffectedAttraction);
+        } else {
+            System.out.println("Could not delete from junction table");
+        }
+
+        return id;
+    }
+
+    public List<String> getAllTagNames(){
+        String sql = "SELECT name FROM Tag ORDER BY name";
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 
 }

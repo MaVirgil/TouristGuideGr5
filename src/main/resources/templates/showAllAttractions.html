@@ -40,17 +40,31 @@
                                 Inserter fragmentet i et <div> element da <form> elementer ikke er må stå direkte i et <td> element.
                                 Tager derudover imod et object attraction=$(attraction) for at korrekt kunne sende en videre.
                                 -->
-                                <div th:insert="~{fragments/_attributeElements :: showAttractionTags(attraction=${attractions})}"></div>
+                                <div>
+                                    <a class="actions" th:href="@{'/attractions/' + ${attractions.id} + '/tags'}">
+                                        <button type="submit">Tags</button>
+                                    </a>
+                                </div>
                             </td>
                             <td>
-                                <div th:replace="~{fragments/_attributeElements :: updateAttractionForm(attraction=${attractions},pageRef='updateAttraction')}"></div>
+                                <div>
+                                    <a class="actions" th:href="@{/attractions/{id}/edit(id=${attractions.id},pageRef='updateAttraction')}">
+                                        <button type="submit">Edit</button>
+                                    </a>
+                                </div>
                             </td>
                             <td>
-                                <div th:insert="~{fragments/_attributeElements :: deleteAttraction(attraction=${attractions})}"></div>
+                                <form class="actions" th:action="@{'/attractions/delete/' + ${attractions.id}}" method="post">
+                                    <button type="submit">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     </table>
-                    <div th:replace="~{fragments/_attributeElements :: newAttractionForm(pageRef='newAttraction')}"></div>
+                    <div>
+                        <a th:href="@{/attractions/add(pageRef='newAttraction')}">
+                            <button type="submit">Register</button>
+                        </a>
+                    </div>
                 </article>
             </section>
             <aside class="right_sidebar"></aside>

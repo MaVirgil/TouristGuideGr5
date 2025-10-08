@@ -13,6 +13,9 @@
 
             <!-- Inputs -->
             <div>
+                <div th:if="${pageRef == 'updateAttraction'}">
+                    <input type="hidden" th:field="*{id}">
+                </div>
                 <div th:if="${pageRef == 'newAttraction'}">
                     <label for="nameSave" class="form-label">Name</label>
                     <input type="text" id="nameSave" th:field="*{name}" placeholder="write name" required maxlength="25">
@@ -27,13 +30,13 @@
                 </div>
                 <label for="city" class="form-label">Select a city</label>
                 <select id="city" th:field="*{city}">
-                    <option th:each="city : ${cities}" th:value="${city}" th:text="${city}"/>
+                    <option th:each="cityName : ${cities}" th:value="${cityName}" th:text="${cityName}"/>
                 </select>
                 <fieldset>
                     <legend>Choose applicable tags</legend>
                     <div th:each="tag : ${tags}" id="tag-checkbox">
-                        <label th:for="${tag.name}" th:text="${tag.name}"></label>
-                        <input type="checkbox" th:id="${tag.name}" th:field="*{selectedTags}" th:value="${tag}" th:attrappend="checked=${attraction.getSelectedTags.contains(tag.name)}">
+                        <label th:for="${tag}" th:text="${tag}"></label>
+                        <input type="checkbox" th:id="${tag}" th:field="*{selectedTags}" th:value="${tag}">
                     </div>
                 </fieldset>
             </div>
