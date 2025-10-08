@@ -1,6 +1,8 @@
-# Tourist Guide - gruppe 5:
-Jacob Klitgaard
+# Touristguide - Gruppe 5
 
-Magnus Sørensen
+### medlemmer:
+- Jacob Klitgaard
+- Magnus Sørensen
+- Jens Gotfredsen
 
-Jens Gotfredsen
+**Main** branch er deployet med Azure [på dette link](https://touristguidegr5-f3bcbjbpgyapaphy.norwayeast-01.azurewebsites.net).
