@@ -67,12 +67,13 @@ public class AttractionController {
 
     //Includes a fall back in case pageRef is not send required = false, defaultValue = "updateAttraction"
     @GetMapping("/attractions/{id}/edit")
-    public String editAttraction(@PathVariable int id, Model model,
+    public String editAttraction(@PathVariable int id, Model model, RedirectAttributes redirectAttributes,
                                  @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
         TouristAttraction attraction = service.getAttractionById(id);
 
         if(attraction == null){
-            throw new IllegalArgumentException("Attraction does not exist");
+            redirectAttributes.addFlashAttribute("attractionNotFound", true);
+            return "redirect:/attractions";
         }
 
         model.addAttribute("attraction", attraction);
@@ -84,11 +85,12 @@ public class AttractionController {
     }
 
     @GetMapping("/attractions/{id}/tags")
-    public String showAttractionTags(@PathVariable int id, Model model){
+    public String showAttractionTags(RedirectAttributes redirectAttributes, @PathVariable int id, Model model){
         TouristAttraction attraction = service.getAttractionById(id);
 
         if(attraction == null){
-            throw new IllegalArgumentException("Attraction does not exist");
+            redirectAttributes.addFlashAttribute("attractionNotFound", true);
+            return "redirect:/attractions";
         }
 
         model.addAttribute("attraction", attraction);
