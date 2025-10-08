@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS tourist_guide;
-CREATE DATABASE tourist_guide
-	DEFAULT CHARACTER SET utf8mb4;
-USE tourist_guide;
+DROP TABLE IF EXIST Tag;
+DROP TABLE IF EXIST City;
+DROP TABLE IF EXIST Attraction;
+DROP TABLE IF EXIST Tags_Attraction_Junction;
 
 CREATE TABLE Tag (
                      id INT NOT NULL UNIQUE AUTO_INCREMENT,

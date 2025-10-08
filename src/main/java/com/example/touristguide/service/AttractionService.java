@@ -1,11 +1,8 @@
 package com.example.touristguide.service;
 
-import com.example.touristguide.model.Tag;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

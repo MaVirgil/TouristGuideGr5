@@ -1,6 +1,5 @@
 package com.example.touristguide.controller;
 
-import com.example.touristguide.model.Tags;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.service.AttractionService;
 import jakarta.servlet.ServletException;
@@ -143,7 +142,7 @@ class AttractionControllerTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentException_editAttraction() throws Exception {
+    void shouldThrowIllegalArgumentException_editAttraction() {
         final int notFoundAttraction = -1;
 
         // Service returns null to simulate a non-existing name

@@ -1,13 +1,9 @@
 package com.example.touristguide.repository;
 
-import com.example.touristguide.model.Tag;
 import com.example.touristguide.model.TouristAttraction;
-import com.example.touristguide.service.AttractionService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -21,53 +17,9 @@ public class AttractionRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<TouristAttraction> attractionMapper = (rs, rowNum) -> {
-        TouristAttraction attraction = new TouristAttraction();
-
-        attraction.setId(rs.getInt("id"));
-        attraction.setName(rs.getString("name"));
-        attraction.setDescription(rs.getString("description"));
-        attraction.setCity(rs.getString("city_name"));
-        return attraction;
-    };
-
-    private final RowMapper<Tag> tagMapper = (rs, rowNum) -> new Tag(
-            rs.getInt("id"),
-            rs.getString("name")
-    );
-
     public AttractionRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
-
-//    public List<TouristAttraction> getAttractions() {
-
-//        String attractionsQuery = """
-//                SELECT A.id as id, A.name AS name, A.description AS description,
-//                C.name AS city_name FROM Attraction A
-//                INNER JOIN City C ON A.city_id = C.id
-//                """;
-//
-//        //get list of attractions (without tagList)
-//        List<TouristAttraction> attractions = jdbcTemplate.query(attractionsQuery, attractionMapper);
-//
-//
-//        //Query to retrieve all tags for specific attraction
-//        String tagListByIdQuery = """
-//                SELECT Tag.name AS tag_name
-//                FROM Tags_attraction_junction TAJ
-//                INNER JOIN Tag ON Tag.id = TAJ.tag_id
-//                WHERE TAJ.attraction_id = ?;
-//                """;
-//
-//        //map tag names (as List<String>) to each attracion
-//        for (TouristAttraction attraction : attractions) {
-//            List<String> tagList = jdbcTemplate.queryForList(tagListByIdQuery, String.class, attraction.getId());
-//            attraction.setSelectedTags(tagList);
-//        }
-//
-//        return attractions;
-//    }
 
     public List<TouristAttraction> getAttractions() {
 
@@ -242,8 +194,6 @@ public class AttractionRepository {
             System.err.println("Error: No row found to update for ID: " + attractionToEdit.getId());
             throw new RuntimeException("Attraction update failed: ID not found.");
         }
-
-        List<String> tags = attractionToEdit.getSelectedTags();
 
         this.deleteTagsByAttractionID(attractionToEdit.getId());
 
