@@ -4,6 +4,7 @@ import com.example.touristguide.model.TouristAttraction;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,23 @@ import java.util.*;
 public class AttractionRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<TouristAttraction> attractionRowMapper = (rs, rowNum) -> {
+        TouristAttraction attraction = new TouristAttraction();
+        attraction.setId(rs.getInt("id"));
+        attraction.setName(rs.getString("name"));
+        attraction.setDescription(rs.getString("description"));
+        attraction.setCity(rs.getString("city_name"));
+
+        String tagsString = rs.getString("tags");
+        if (tagsString != null) {
+            List<String> tags = Arrays.asList(tagsString.split(","));
+            attraction.setSelectedTags(tags);
+        } else {
+            attraction.setSelectedTags(Collections.emptyList());
+        }
+        return attraction;
+    };
 
     public AttractionRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
@@ -38,22 +56,7 @@ public class AttractionRepository {
         ORDER BY A.name;
         """;
 
-        return jdbcTemplate.query(query, (rs, rowNum) -> {
-            TouristAttraction attraction = new TouristAttraction();
-            attraction.setId(rs.getInt("id"));
-            attraction.setName(rs.getString("name"));
-            attraction.setDescription(rs.getString("description"));
-            attraction.setCity(rs.getString("city_name"));
-
-            String tagsString = rs.getString("tags");
-            if (tagsString != null) {
-                List<String> tags = Arrays.asList(tagsString.split(","));
-                attraction.setSelectedTags(tags);
-            } else {
-                attraction.setSelectedTags(Collections.emptyList());
-            }
-            return attraction;
-        });
+        return jdbcTemplate.query(query, attractionRowMapper);
     }
 
     public List<String> getCities() {
@@ -86,23 +89,7 @@ public class AttractionRepository {
         ORDER BY A.name;
         """;
 
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
-            TouristAttraction attraction = new TouristAttraction();
-            attraction.setId(rs.getInt("id"));
-            attraction.setName(rs.getString("name"));
-            attraction.setDescription(rs.getString("description"));
-            attraction.setCity(rs.getString("city_name"));
-
-            String tagsString = rs.getString("tags");
-            if (tagsString != null) {
-                List<String> tags = Arrays.asList(tagsString.split(","));
-                attraction.setSelectedTags(tags);
-            } else {
-                attraction.setSelectedTags(Collections.emptyList());
-            }
-            return attraction;
-        },
-        id);
+        return jdbcTemplate.queryForObject(query, attractionRowMapper, id);
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
