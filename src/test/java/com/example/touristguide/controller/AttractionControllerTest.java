@@ -169,6 +169,12 @@ class AttractionControllerTest {
                 .andExpect(model().attribute("pageRef", customRef));
     }
 
+    /*
+     * ====================================================
+     *                      POST Tests
+     * ====================================================
+     */
+
     @Test
     void shouldRedirectAfterSave() throws Exception {
 
@@ -184,11 +190,6 @@ class AttractionControllerTest {
         verify(attractionService).addAttraction(any(TouristAttraction.class));
     }
 
-    /*
-     * ====================================================
-     *                      POST Tests
-     * ====================================================
-     */
 
     @Test
     void shouldUpdateAttraction() throws Exception {

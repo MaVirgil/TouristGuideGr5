@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -41,5 +42,23 @@ public class AttractionRepositoryTest {
         List<TouristAttraction> newList = repo.getAttractions();
 
         assertThat(newList.size()).isEqualTo(1);
+    }
+
+    @Test void shouldInsertAttraction(){
+        List<TouristAttraction> attractionList = repo.getAttractions();
+        TouristAttraction attraction = new TouristAttraction();
+        attraction.setId(1);
+        attraction.setName("test");
+        attraction.setDescription("test");
+        attraction.setCity("Copenhagen");
+
+        assertThat(attractionList).isNotNull();
+        assertThat(attractionList.size()).isEqualTo(2);
+
+        repo.addAttraction(attraction);
+
+        List<TouristAttraction> newList = repo.getAttractions();
+
+        assertThat(newList.size()).isEqualTo(3);
     }
 }
