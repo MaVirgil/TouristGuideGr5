@@ -22,6 +22,9 @@
                 <div th:if="${failedToEdit}">
                     <dialog th:replace="~{fragments/_commonElements :: errorBox(message='Failed to update attraction! Try again')}"></dialog>
                 </div>
+                <div th:if="${attractionNotFound}">
+                    <dialog th:replace="~{fragments/_commonElements :: errorBox(message='Attraction no longer exists!')}"></dialog>
+                </div>
                 <article class="info-box">
                     <h1>Tourist Attractions</h1>
                     <table>
