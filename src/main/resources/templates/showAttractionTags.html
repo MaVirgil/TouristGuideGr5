@@ -22,7 +22,7 @@
                     <ul>
                         <li th:each="tagList : ${attraction.getSelectedTags}" th:text="${tagList}"></li>
                     </ul>
-                    <div th:replace="~{/fragments/_formElements :: formGoBack}"></div>
+                    <div th:replace="~{fragments/_formElements :: formGoBack}"></div>
                 </article>
             </section>
             <aside class="right_sidebar"></aside>
