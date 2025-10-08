@@ -43,6 +43,10 @@ public class AttractionController {
 
         TouristAttraction attraction = service.getAttractionById(id);
 
+        //Debugging
+        System.out.println("Fetched attraction: " +attraction);
+        System.out.println("Attraction name: " + attraction.getName());
+
         model.addAttribute("byName", attraction);
 
         return "showAttraction";
