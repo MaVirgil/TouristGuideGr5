@@ -21,6 +21,13 @@
         </nav>
     </div>
 
+    <!--Dialog Box fragment -->
+    <dialog id="error-box" th:fragment="errorBox(message)" open>
+        <form>
+            <p th:text="${message}"></p>
+            <button>OK</button>
+        </form>
+    </dialog>
     <!-- CONTENT FRAGMENTS || Could be useful for dynamically generated sections? -->
     <section th:fragment="sections"></section>
 

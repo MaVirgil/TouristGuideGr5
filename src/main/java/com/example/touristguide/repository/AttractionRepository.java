@@ -74,7 +74,7 @@ public class AttractionRepository {
 
         String query = """
         
-                SELECT
+        SELECT
             A.id AS id,
             A.name AS name,
             A.description AS description,
@@ -89,7 +89,12 @@ public class AttractionRepository {
         ORDER BY A.name;
         """;
 
-        return jdbcTemplate.queryForObject(query, attractionRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(query, attractionRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
@@ -153,6 +158,7 @@ public class AttractionRepository {
     public TouristAttraction editAttraction(TouristAttraction attractionToEdit) {
 
         int newCityId = this.getCityByName(attractionToEdit.getCity());
+
         if (newCityId == -1) {
             // Handle error: City not found (though you said it's successful)
             System.err.println("Error: City '" + attractionToEdit.getCity() + "' not found during update.");
@@ -176,10 +182,9 @@ public class AttractionRepository {
 
         int rowsAffected = jdbcTemplate.update(updateQuery, args);
 
-        //Confirm the row was updated
+        //early return if 0 rows affected
         if (rowsAffected == 0) {
-            System.err.println("Error: No row found to update for ID: " + attractionToEdit.getId());
-            throw new RuntimeException("Attraction update failed: ID not found.");
+            return null;
         }
 
         this.deleteTagsByAttractionID(attractionToEdit.getId());
@@ -192,7 +197,6 @@ public class AttractionRepository {
         }
 
         return this.getAttractionById(attractionToEdit.getId());
-
     }
 
     public Map<String, Integer> getTags() {
