@@ -117,8 +117,6 @@ public class AttractionRepository {
         if (generatedKey == null) {
             throw new RuntimeException("Failed to obtain generated key for Attraction");
         }
-        int newAttractionId = generatedKey.intValue();
-        attraction.setId(newAttractionId);
 
         Map<String, Integer> tagMap = getTags();
         if (attraction.getSelectedTags() != null) {
