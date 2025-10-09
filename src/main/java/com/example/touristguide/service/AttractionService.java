@@ -1,6 +1,7 @@
 package com.example.touristguide.service;
 
 import com.example.touristguide.exceptions.service.AttractionNotFoundException;
+import com.example.touristguide.exceptions.service.AttractionValidationException;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,15 @@ public class AttractionService {
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
+
+        String name = attraction.getName();
+        attraction.setName(name);
+
+        //Handling exception for blank name
+        if (name.isBlank()) {
+            throw new AttractionValidationException("name", "must not be empty");
+        }
+
         return this.repository.addAttraction(attraction);
     }
 

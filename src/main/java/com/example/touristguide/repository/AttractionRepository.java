@@ -102,10 +102,6 @@ public class AttractionRepository {
         String name = attraction.getName().trim();
         attraction.setName(name);
 
-        if (name.isBlank()) {
-            throw new IllegalArgumentException("Attraction name must not be empty");
-        }
-
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM Attraction WHERE name = ?", Integer.class, name);
 
