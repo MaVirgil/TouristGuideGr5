@@ -18,6 +18,7 @@ public class AttractionRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    //define an implementation of RowMapper interface that maps Attraction data and splits concatenated "tags" string
     private final RowMapper<TouristAttraction> attractionRowMapper = (rs, rowNum) -> {
         TouristAttraction attraction = new TouristAttraction();
         attraction.setId(rs.getInt("id"));
@@ -41,6 +42,7 @@ public class AttractionRepository {
 
     public List<TouristAttraction> getAttractions() {
 
+        //retrieves all data regarding an attracion, concatenating each attracion's tags in a comma-seperated String
         String query = """
         SELECT
             A.id AS id,
@@ -99,13 +101,16 @@ public class AttractionRepository {
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
 
+        //make sure attraction name does not start or end with empty spaces
         String name = attraction.getName().trim();
         attraction.setName(name);
 
+        //check that attraction object has a name
         if (name.isBlank()) {
             throw new IllegalArgumentException("Attraction name must not be empty");
         }
 
+        //if attraction with the same name is already in database, do not add new attraction and return null
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM Attraction WHERE name = ?", Integer.class, name);
 
@@ -113,11 +118,13 @@ public class AttractionRepository {
             return null;
         }
 
+        //check if attraction's city already exists in database
         int cityId = getCityByName(attraction.getCity());
         if (cityId == -1) {
             throw new RuntimeException("City not found: " + attraction.getCity());
         }
 
+        //insert attraction into Attraction table, and retrieve generated key with keyHolder object
         String insertSql = "INSERT INTO Attraction (name, description, city_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -133,6 +140,7 @@ public class AttractionRepository {
             return null;
         }
 
+        //check if key got extracted, and set the attraction object's ID to the key value
         Number generatedKey = keyHolder.getKey();
         if (generatedKey == null) {
             throw new RuntimeException("Failed to obtain generated key for Attraction");
@@ -140,6 +148,7 @@ public class AttractionRepository {
         int newAttractionId = generatedKey.intValue();
         attraction.setId(newAttractionId);
 
+        //populate junction table with attraction-tag relations
         Map<String, Integer> tagMap = getTags();
         if (attraction.getSelectedTags() != null) {
             for (String tagName : attraction.getSelectedTags()) {
@@ -159,8 +168,8 @@ public class AttractionRepository {
 
         int newCityId = this.getCityByName(attractionToEdit.getCity());
 
+        //check if new value for city exists in city table of database
         if (newCityId == -1) {
-            // Handle error: City not found (though you said it's successful)
             System.err.println("Error: City '" + attractionToEdit.getCity() + "' not found during update.");
             throw new RuntimeException("Cannot update attraction: City not found.");
         }
@@ -182,7 +191,7 @@ public class AttractionRepository {
 
         int rowsAffected = jdbcTemplate.update(updateQuery, args);
 
-        //early return if 0 rows affected
+        //return null if no row was changed
         if (rowsAffected == 0) {
             return null;
         }
@@ -206,8 +215,10 @@ public class AttractionRepository {
                 FROM Tag
                 """;
 
+        //get each row containing tag name and ID as a map in a list (this is how the jdbcTemplate method works, sorry
         List<Map<String, Object>> rows = jdbcTemplate.queryForList((query));
 
+        //convert list of maps to one map
         Map<String, Integer> resultset = new HashMap<>();
         for(Map<String, Object> row : rows) {
             resultset.put((String) row.get("name"), (Integer) row.get("id"));
@@ -223,8 +234,6 @@ public class AttractionRepository {
         Object[] args = {
                 attractionId
         };
-
-
 
         return jdbcTemplate.update(deleteSql, args);
     }
