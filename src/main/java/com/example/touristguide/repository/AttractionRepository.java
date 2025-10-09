@@ -120,18 +120,6 @@ public class AttractionRepository {
             throw new RuntimeException("Failed to obtain generated key for Attraction");
         }
 
-        Map<String, Integer> tagMap = getTags();
-        if (attraction.getSelectedTags() != null) {
-            for (String tagName : attraction.getSelectedTags()) {
-                Integer tagId = tagMap.get(tagName);
-                if (tagId == null) {
-                    jdbcTemplate.update("INSERT INTO Tag (name) VALUES (?)", tagName);
-                    tagId = jdbcTemplate.queryForObject("SELECT id FROM Tag WHERE name = ?", Integer.class, tagName);
-                    tagMap.put(tagName, tagId);
-                }
-                addAttractionTagsByID(newAttractionId, tagId);
-            }
-        }
         return generatedKey.intValue();
     }
 
