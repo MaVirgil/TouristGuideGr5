@@ -74,7 +74,7 @@ public class AttractionRepository {
 
         String query = """
         
-                SELECT
+        SELECT
             A.id AS id,
             A.name AS name,
             A.description AS description,
