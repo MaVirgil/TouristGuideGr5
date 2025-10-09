@@ -56,6 +56,9 @@ public class AttractionService {
             throw new CityNotFoundException(attraction.getCity());
         }
 
+        int newAttractionId = repository.addAttraction(attraction, cityId);
+        attraction.setId(newAttractionId);
+
         return this.repository.addAttraction(attraction, cityId);
     }
 

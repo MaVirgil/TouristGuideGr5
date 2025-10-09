@@ -97,7 +97,7 @@ public class AttractionRepository {
         }
     }
 
-    public TouristAttraction addAttraction(TouristAttraction attraction, int cityId) {
+    public int addAttraction(TouristAttraction attraction, int cityId) {
         String insertSql = "INSERT INTO Attraction (name, description, city_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -132,7 +132,7 @@ public class AttractionRepository {
                 addAttractionTagsByID(newAttractionId, tagId);
             }
         }
-        return attraction;
+        return generatedKey.intValue();
     }
 
     public TouristAttraction editAttraction(TouristAttraction attractionToEdit) {
