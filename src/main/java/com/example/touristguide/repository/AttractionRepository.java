@@ -98,17 +98,6 @@ public class AttractionRepository {
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
-
-        String name = attraction.getName().trim();
-        attraction.setName(name);
-
-        Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM Attraction WHERE name = ?", Integer.class, name);
-
-        if (count != null && count > 0) {
-            return null;
-        }
-
         int cityId = getCityByName(attraction.getCity());
         if (cityId == -1) {
             throw new RuntimeException("City not found: " + attraction.getCity());
@@ -278,6 +267,13 @@ public class AttractionRepository {
     public List<String> getAllTagNames(){
         String sql = "SELECT name FROM Tag ORDER BY name";
         return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    public boolean existsByName(String name){
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(id) FROM Attraction WHERE name = ?", Integer.class, name);
+
+        return count != null && count > 0;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.touristguide.service;
 
+import com.example.touristguide.exceptions.AttractionExistException;
 import com.example.touristguide.exceptions.AttractionNotFoundException;
 import com.example.touristguide.exceptions.AttractionValidationException;
 import com.example.touristguide.model.TouristAttraction;
@@ -42,6 +43,10 @@ public class AttractionService {
         //Handling exception for blank name
         if (name.isBlank()) {
             throw new AttractionValidationException("name", "must not be empty");
+        }
+
+        if(repository.existsByName(name)){
+            throw new AttractionExistException(name);
         }
 
         return this.repository.addAttraction(attraction);
