@@ -71,10 +71,6 @@ public class AttractionController {
                                  @RequestParam(value = "pageRef", required = false, defaultValue = "updateAttraction") String pageRef) {
         TouristAttraction attraction = service.getAttractionById(id);
 
-        if(attraction == null){
-            throw new IllegalArgumentException("Attraction does not exist");
-        }
-
         model.addAttribute("attraction", attraction);
         model.addAttribute("tags", service.getAllTagNames());
         model.addAttribute("cities", this.service.getCities());

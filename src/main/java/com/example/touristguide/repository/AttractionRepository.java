@@ -89,7 +89,12 @@ public class AttractionRepository {
         ORDER BY A.name;
         """;
 
-        return jdbcTemplate.queryForObject(query, attractionRowMapper, id);
+        //Handling of AttractionNotFound exception so it return null for the service
+        try {
+            return jdbcTemplate.queryForObject(query, attractionRowMapper, id);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {

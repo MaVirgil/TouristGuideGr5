@@ -22,6 +22,22 @@
                         <button>OK</button>
                     </form>
                 </dialog>
+                <dialog th:id="errorDialog" class="error-dialog" th:if="${errorMessage}">
+                    <h3>Not Found</h3>
+                    <p th:text="${errorMessage}"></p>
+                    <form method="dialog">
+                        <button>Close</button>
+                    </form>
+                </dialog>
+                <script th:if="${errorMessage}" th:inline="javascript">
+                    /* <![CDATA[*/
+                    const dialog = document.getElementById('errorDialog');
+                    if(dialog){
+                        dialog.showModal();
+                    }
+                    /* ]]> */
+                </script>
+
                 <article class="info-box">
                     <h1>Tourist Attractions</h1>
                     <table>

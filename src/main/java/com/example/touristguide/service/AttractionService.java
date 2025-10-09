@@ -1,5 +1,6 @@
 package com.example.touristguide.service;
 
+import com.example.touristguide.exceptions.service.AttractionNotFoundException;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,14 @@ public class AttractionService {
     }
 
     public TouristAttraction getAttractionById(int id){
-        return this.repository.getAttractionById(id);
+
+        TouristAttraction attraction = this.repository.getAttractionById(id);
+
+        if(attraction == null){
+            throw new AttractionNotFoundException(id);
+        }
+
+        return attraction;
     }
 
     public TouristAttraction addAttraction(TouristAttraction attraction) {
