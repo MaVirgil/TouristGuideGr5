@@ -193,6 +193,9 @@ class AttractionControllerTest {
 
     @Test
     void shouldUpdateAttraction() throws Exception {
+        when(attractionService.editAttraction(any(TouristAttraction.class)))
+                .thenReturn(testAttraction);
+
         mockMvc.perform(post("/attractions/update")
                 .flashAttr("attraction", testAttraction))
                 .andExpect(status().is3xxRedirection())
