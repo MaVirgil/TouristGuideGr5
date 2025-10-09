@@ -110,7 +110,7 @@ public class AttractionRepository {
                 return ps;
             }, keyHolder);
         } catch (DuplicateKeyException e) {
-            return null;
+            throw e;
         }
 
         Number generatedKey = keyHolder.getKey();

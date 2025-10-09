@@ -59,7 +59,7 @@ public class AttractionService {
         int newAttractionId = repository.addAttraction(attraction, cityId);
         attraction.setId(newAttractionId);
 
-        return this.repository.addAttraction(attraction, cityId);
+        return attraction;
     }
 
 
