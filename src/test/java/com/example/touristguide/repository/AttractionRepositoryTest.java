@@ -52,10 +52,12 @@ public class AttractionRepositoryTest {
         attraction.setDescription("test");
         attraction.setCity("Copenhagen");
 
+        int cityId = repo.getCityByName(attraction.getCity());
+
         assertThat(attractionList).isNotNull();
         assertThat(attractionList.size()).isEqualTo(2);
 
-        repo.addAttraction(attraction);
+        repo.addAttraction(attraction,cityId);
 
         List<TouristAttraction> newList = repo.getAttractions();
 

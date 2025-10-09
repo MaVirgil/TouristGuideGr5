@@ -97,12 +97,7 @@ public class AttractionRepository {
         }
     }
 
-    public TouristAttraction addAttraction(TouristAttraction attraction) {
-        int cityId = getCityByName(attraction.getCity());
-        if (cityId == -1) {
-            throw new RuntimeException("City not found: " + attraction.getCity());
-        }
-
+    public TouristAttraction addAttraction(TouristAttraction attraction, int cityId) {
         String insertSql = "INSERT INTO Attraction (name, description, city_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

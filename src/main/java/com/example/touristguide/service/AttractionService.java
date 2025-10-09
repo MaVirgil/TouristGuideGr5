@@ -3,6 +3,7 @@ package com.example.touristguide.service;
 import com.example.touristguide.exceptions.AttractionExistException;
 import com.example.touristguide.exceptions.AttractionNotFoundException;
 import com.example.touristguide.exceptions.AttractionValidationException;
+import com.example.touristguide.exceptions.CityNotFoundException;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,13 @@ public class AttractionService {
             throw new AttractionExistException(name);
         }
 
-        return this.repository.addAttraction(attraction);
+        int cityId = repository.getCityByName(attraction.getCity());
+
+        if (cityId == -1) {
+            throw new CityNotFoundException(attraction.getCity());
+        }
+
+        return this.repository.addAttraction(attraction, cityId);
     }
 
 
