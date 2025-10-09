@@ -1,6 +1,7 @@
 package com.example.touristguide.repository;
 
 import com.example.touristguide.model.TouristAttraction;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.*;
 
 @Repository
@@ -267,6 +269,34 @@ public class AttractionRepository {
                 "SELECT COUNT(id) FROM Attraction WHERE name = ?", Integer.class, name);
 
         return count != null && count > 0;
+    }
+
+    public void addTag(String tagName){
+        String sql = "INSERT INTO Tag (name) VALUES (?)";
+        jdbcTemplate.update(sql, tagName);
+    }
+
+    public Integer getTagIdByName(String tagName){
+        String sql = "SELECT id FROM Tag WHERE name = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, tagName);
+        } catch (DataAccessException e)  {
+            return null;
+        }
+    }
+
+    public void addAttractionTags(int attractionId, int tagId){
+        String sql = "INSERT INTO (Tags_Attraction_Junction) VALUES (?, ?)";
+
+        Object[] args = {
+            attractionId, tagId
+        };
+
+        int[] argTypes = {
+            Types.INTEGER, Types.INTEGER
+        };
+
+        jdbcTemplate.update(sql, args, argTypes);
     }
 
 }
