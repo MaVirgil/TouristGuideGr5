@@ -1,7 +1,7 @@
 package com.example.touristguide.service;
 
-import com.example.touristguide.exceptions.service.AttractionNotFoundException;
-import com.example.touristguide.exceptions.service.AttractionValidationException;
+import com.example.touristguide.exceptions.AttractionNotFoundException;
+import com.example.touristguide.exceptions.AttractionValidationException;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
