@@ -273,20 +273,6 @@ public class AttractionRepository {
         }
     }
 
-    public void addAttractionTags(int attractionId, int tagId){
-        String sql = "INSERT INTO (Tags_Attraction_Junction) VALUES (?, ?)";
-
-        Object[] args = {
-            attractionId, tagId
-        };
-
-        int[] argTypes = {
-            Types.INTEGER, Types.INTEGER
-        };
-
-        jdbcTemplate.update(sql, args, argTypes);
-    }
-
 }
 
 

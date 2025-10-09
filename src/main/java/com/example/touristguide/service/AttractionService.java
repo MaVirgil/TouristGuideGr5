@@ -7,7 +7,10 @@ import com.example.touristguide.exceptions.CityNotFoundException;
 import com.example.touristguide.model.TouristAttraction;
 import com.example.touristguide.repository.AttractionRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AttractionService {
@@ -58,6 +61,18 @@ public class AttractionService {
 
         int newAttractionId = repository.addAttraction(attraction, cityId);
         attraction.setId(newAttractionId);
+
+
+        if (attraction.getSelectedTags() != null) {
+            for (String tagName : attraction.getSelectedTags()) {
+                Integer tagId = repository.getTagIdByName(tagName);
+                if (tagId == null) {
+                    repository.addTag((tagName));
+                    tagId = repository.getTagIdByName(tagName);
+                }
+                repository.addAttractionTagsByID(newAttractionId, tagId);
+            }
+        }
 
         return attraction;
     }
